@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "Typescript-based tools for working with Swagger v2.0 documents",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/carlansley/swagger2.git"
@@ -21,5 +18,41 @@
   "bugs": {
     "url": "https://github.com/carlansley/swagger2/issues"
   },
-  "homepage": "https://github.com/carlansley/swagger2#readme"
+  "homepage": "https://github.com/carlansley/swagger2#readme",
+  "typings": "./dist/cjs/Rx.d.ts",
+  "dependencies": {
+    "is-my-json-valid": "^2.13.1",
+    "json-schema-deref-sync": "^0.2.9",
+    "yamljs": "^0.2.6"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.8",
+    "expectations": "^0.5.2",
+    "istanbul": "^1.0.0-alpha.2",
+    "mocha": "^2.4.5",
+    "nock": "^7.2.2",
+    "remap-istanbul": "^0.5.1",
+    "tslint": "^3.5.0",
+    "typescript": "^1.8.7",
+    "typings": "^0.7.7"
+  },
+  "maintainers": [
+    {
+      "email": "carl.ansley@gmail.com",
+      "name": "Carl Ansley"
+    }
+  ],
+  "scripts": {
+    "prepublish": "typings install && npm run dist",
+    "build": "rm -rf build && tsc",
+    "dist": "rm -rf dist && tsc typings/main.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target ES5 -d --pretty --noImplicitAny",
+    "clean": "rm -rf build && rm -rf dist && rm -rf typings && rm -rf coverage && rm -rf node_modules",
+    "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts src/**/**/**/*.ts",
+    "test": "npm run lint && npm run build && node --harmony --harmony_default_parameters --harmony_destructuring node_modules/.bin/_mocha --require expectations $(find build -name '*.spec.js')",
+    "cover": "npm run build && npm run cover:istanbul && npm run cover:remap",
+    "cover:browser": "npm run cover && istanbul report html && open coverage/coverage-remapped/index.html",
+    "cover:istanbul": "rm -rf ./coverage && node --harmony --harmony_default_parameters --harmony_destructuring node_modules/.bin/istanbul cover _mocha -- --require expectations $(find build -name '*.spec.js')",
+    "cover:remap": "remap-istanbul -i coverage/coverage.raw.json -o coverage/coverage-remapped.json && remap-istanbul -i coverage/coverage.raw.json -o coverage/coverage-remapped.lcov -t lcovonly && remap-istanbul -i coverage/coverage.raw.json -o coverage/coverage-remapped -t html",
+    "coveralls": "npm run-script cover && coveralls < coverage/coverage-remapped.lcov"
+  }
 }

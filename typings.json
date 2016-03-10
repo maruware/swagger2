@@ -1,0 +1,9 @@
+{
+  "ambientDependencies": {
+    "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts#627b6c158b73494c803f36fc2fe00ad75faa8fde",
+    "nock": "github:DefinitelyTyped/DefinitelyTyped/nock/nock.d.ts#f29bf726a60674dbf24bab06a26403a3871c3f21",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#f29bf726a60674dbf24bab06a26403a3871c3f21",
+    "winston": "github:DefinitelyTyped/DefinitelyTyped/winston/winston.d.ts#fd9f16f862587bde12e5254e4c1e3d21ae94f9d1",
+    "yamljs": "registry:dt/yamljs#0.2.3+20150813143309"
+  }
+}
