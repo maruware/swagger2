@@ -35,7 +35,7 @@ import * as fs from 'fs';
 import {Document} from './schema';
 
 // build a swagger validator from the official v2.0 schema
-const schemaValidator = jsonValidator(JSON.parse(fs.readFileSync('./src/schema.json', 'utf8')));
+const schemaValidator = jsonValidator(JSON.parse(fs.readFileSync(__dirname + '/schema.json', 'utf8')));
 
 /*
  * Validate a swagger document against the 2.0 schema, returning a typed Document object.
