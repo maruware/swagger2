@@ -6,6 +6,5 @@ pids
 lib-cov
 .idea
 build
-dist
 node_modules
 typings
