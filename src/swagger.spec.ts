@@ -32,4 +32,5 @@ describe('swagger2', () => {
   it('has a validateDocument function', () => assert.equal(typeof swagger.validateDocument, 'function'));
   it('has a validateRequest function', () => assert.equal(typeof swagger.validateRequest, 'function'));
   it('has a validateResponse function', () => assert.equal(typeof swagger.validateResponse, 'function'));
+  it('has a compileDocument function', () => assert.equal(typeof swagger.compileDocument, 'function'));
 });

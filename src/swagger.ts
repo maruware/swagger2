@@ -4,7 +4,7 @@
  * swagger2
  *
  * Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents
- * 
+ *
  */
 
 /*
@@ -33,8 +33,18 @@
 
 import * as validate from './validate';
 import * as document from './document';
+import * as compiler from './compiler';
+
+/* tslint:disable:no-unused-variable */
+//noinspection ES6UnusedImports
+import * as schema from './schema';
+/* tslint:enable:no-unused-variable */
 
 export const loadDocumentSync = document.loadDocumentSync;
 export const validateDocument = document.validateDocument;
 export const validateRequest = validate.request;
 export const validateResponse = validate.response;
+export const compileDocument = compiler.compile;
+
+export import Compiled = compiler.Compiled;
+export import Document = schema.Document;
