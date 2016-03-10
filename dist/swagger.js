@@ -31,8 +31,11 @@
  */
 const validate = require('./validate');
 const document = require('./document');
+const compiler = require('./compiler');
+/* tslint:enable:no-unused-variable */
 exports.loadDocumentSync = document.loadDocumentSync;
 exports.validateDocument = document.validateDocument;
 exports.validateRequest = validate.request;
 exports.validateResponse = validate.response;
+exports.compileDocument = compiler.compile;
 //# sourceMappingURL=swagger.js.map
