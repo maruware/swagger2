@@ -2,12 +2,22 @@
 [![Coverage Status](https://coveralls.io/repos/github/carlansley/swagger2/badge.svg?branch=master)](https://coveralls.io/github/carlansley/swagger2?branch=master)
 
 # swagger2
-Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents
+Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents.  It is designed to
+run in environments with node v5.x and above.
 
 ## Installation
 
 ```shell
 $ npm install swagger2 --save
+```
+
+## Limitations
+
+* requires node v5.4 or above
+* swagger2 is written in Typescript 1.8+, targeting ES6.  It must be run with the following nodejs parameters:
+
+```shell
+node --harmony --harmony_default_parameters --harmony_destructuring
 ```
 
 ## Development

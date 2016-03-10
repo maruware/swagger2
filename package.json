@@ -19,7 +19,7 @@
     "url": "https://github.com/carlansley/swagger2/issues"
   },
   "homepage": "https://github.com/carlansley/swagger2#readme",
-  "typings": "./dist/cjs/Rx.d.ts",
+  "typings": "./dist/swagger.d.ts",
   "dependencies": {
     "is-my-json-valid": "^2.13.1",
     "json-schema-deref-sync": "^0.2.9",
@@ -45,7 +45,7 @@
   "scripts": {
     "prepublish": "typings install && npm run dist",
     "build": "rm -rf build && tsc",
-    "dist": "rm -rf dist && tsc typings/main.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target ES5 -d --pretty --noImplicitAny",
+    "dist": "rm -rf dist && tsc typings/main.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es6 -d --pretty --noImplicitAny",
     "clean": "rm -rf build && rm -rf dist && rm -rf typings && rm -rf coverage && rm -rf node_modules",
     "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts src/**/**/**/*.ts",
     "test": "npm run lint && npm run build && node --harmony --harmony_default_parameters --harmony_destructuring node_modules/.bin/_mocha --require expectations $(find build -name '*.spec.js')",
