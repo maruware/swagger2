@@ -32,25 +32,34 @@ export type ParameterType = 'query' | 'path' | 'body';
 export type DataType = 'string' | 'number' | 'integer' | 'boolean';
 export type DataFormat = 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
 
-export interface Schema {
-  type: DataType;
-  format: DataFormat;
-  schema: any;
+export interface Definition {
+  '$ref'?: string;
+  type?: DataType;
+  format?: DataFormat;
+  schema?: any;
+  required?: boolean;
 }
 
 //noinspection ReservedWordAsName
-export interface Parameter extends Schema {
-  name: string;
-  in: ParameterType;
+export interface Parameter extends Definition {
+  name?: string;
+  in?: ParameterType;
+  description?: string;
 }
 
-export interface Response extends Schema {
+export interface Response extends Definition {
   description: string;
+  headers?: any;
+  examples?: any;
 }
 
 export interface Operation {
-  summary: string;
-  parameters: Parameter[];
+  summary?: string;
+  operationId?: string;
+  description?: string;
+  tags?: string[];
+  produces?: string[];
+  parameters?: Parameter[];
   responses: { [ statusCode: string ]: Response };
 }
 
@@ -58,14 +67,34 @@ export interface Path {
   [ method: string ]: Operation; // method = 'get' | 'post' | 'put' | 'delete' | 'patch';
 }
 
+export interface License {
+  name: string;
+  url?: string;
+}
+
+export interface Contact {
+  name: string;
+  email: string;
+  url: string;
+}
+
 export interface Info {
   title: string;
   version: string;
+  license?: License;
+  contact?: Contact;
+  description?: string;
+  termsOfService?: string;
 }
 
 export interface Document {
   swagger: '2.0';
   info: Info;
   basePath?: string;
+  host?: string;
+  schemes?: string[];
+  consumes?: string[];
+  produces?: string[];
   paths: { [ path: string ]: Path };
+  definitions?: any;
 }

@@ -31,13 +31,13 @@
 import * as jsonValidator from 'is-my-json-valid';
 import * as deref from 'json-schema-deref-sync';
 
-import {Path, Document, Schema} from './schema';
+import {Path, Document, Definition} from './schema';
 
 export interface Compiled {
   (path: string): CompiledPath;
 }
 
-export interface CompiledSchema extends Schema {
+export interface CompiledDefinition extends Definition {
   validator?: (value: any) => boolean;
 }
 
@@ -57,15 +57,15 @@ export function compile(document: Document): Compiled {
     let path = swagger.paths[pathName];
     Object.keys(path).forEach(operationName => {
       let operation = path[operationName];
-      (operation.parameters || []).forEach((parameter: CompiledSchema) => {
+      (operation.parameters || []).forEach((parameter: CompiledDefinition) => {
         parameter.validator = jsonValidator(parameter.schema || parameter);
       });
       Object.keys(operation.responses).forEach(statusCode => {
         let response = operation.responses[statusCode];
-        if (response.schema) {
-          response.validator = jsonValidator(response.schema);
+        if (response.Definition) {
+          response.validator = jsonValidator(response.Definition);
         } else {
-          // no schema, so ensure there is no response
+          // no Definition, so ensure there is no response
           response.validator = (body: any) => body === undefined;
         }
       });

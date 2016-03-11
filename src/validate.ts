@@ -28,7 +28,7 @@
  THE SOFTWARE.
  */
 
-import {CompiledPath, CompiledSchema} from './compiler';
+import {CompiledPath, CompiledDefinition} from './compiler';
 
 export interface ValidationError {
   where?: string;
@@ -37,7 +37,7 @@ export interface ValidationError {
 }
 
 
-function validate(value: any, schema: CompiledSchema): ValidationError {
+function validate(value: any, schema: CompiledDefinition): ValidationError {
   let valid = schema.validator(value);
   if (!valid) {
     return {
