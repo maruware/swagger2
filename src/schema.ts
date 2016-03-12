@@ -1,7 +1,19 @@
-// schema.ts
-
 /*
- * Type definitions for Swagger 2.0 schema, only the minimal set required for validation
+ * schema.ts
+ *
+ * Type definition for Swagger 2.0 schema, decorated with comments from the
+ * version 2.0 spec at: http://swagger.io/specification/
+ *
+ * Names of objects, fields and types are designed to match the specification
+ * as consistently as possible.  e.g. the Path Item Object in the spec is defined by
+ * PathItem interface.
+ *
+ * Limitations of type definition:
+ * 1) Does not support extensions to the Swagger Schema, e.g. x-internal-id.
+ *    Therefore presence in an object literal will result in a compiler error.
+ * 2) Format field values are limited to those enumerated in DataFormat type.
+ *    The spec allows for any string.
+ * 3) ONLY SUPPORTS 2.0 SCHEMA.
  */
 
 /*
@@ -29,8 +41,189 @@
  */
 
 export type ParameterType = 'query' | 'path' | 'body';
-export type DataType = 'string' | 'number' | 'integer' | 'boolean';
-export type DataFormat = 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
+export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+export type Schemes = 'http' | 'https' | 'ws' | 'wss';
+
+/*
+ This is the root document object for the API specification. It combines what previously was the Resource Listing
+ and API Declaration (version 1.2 and earlier) together into one document.
+ */
+export interface Document {
+  /*
+   Specifies the Swagger Specification version being used. It can be used by the Swagger UI and other clients to
+   interpret the API listing. The value MUST be "2.0".
+   */
+  swagger: '2.0';
+
+  /*
+   Provides metadata about the API. The metadata can be used by the clients if needed.
+   */
+  info: Info;
+
+  /*
+   The host (name or ip) serving the API. This MUST be the host only and does not include the scheme nor sub-paths. It
+   MAY include a port. If the host is not included, the host serving the documentation is to be used (including the
+   port). The host does not support path templating.
+   */
+  host?: string;
+
+  /*
+   The base path on which the API is served, which is relative to the host. If it is not included, the API is served
+   directly under the host. The value MUST start with a leading slash (/). The basePath does not support path
+   templating.
+   */
+  basePath?: string;
+
+  /*
+   The transfer protocol of the API. Values MUST be from the list: "http", "https", "ws", "wss". If the schemes is not
+   included, the default scheme to be used is the one used to access the Swagger definition itself.
+   */
+  schemes?: Schemes[];
+
+  /*
+   A list of MIME types the APIs can consume. This is global to all APIs but can be overridden on specific API calls.
+   Value MUST be as described under Mime Types.
+   */
+  consumes?: string[];
+
+  /*
+   A list of MIME types the APIs can produce. This is global to all APIs but can be overridden on specific API calls.
+   Value MUST be as described under Mime Types.
+   */
+  produces?: string[];
+
+  /*
+   The available paths and operations for the API.
+   */
+  paths: Paths;
+
+  /*
+   An object to hold data types produced and consumed by operations.
+   */
+  definitions?: Definitions;
+
+  /*
+   An object to hold parameters that can be used across operations. This property does not define global parameters for
+   all operations.
+   */
+  parameters?: ParametersDefinitions;
+
+  /*
+   An object to hold responses that can be used across operations. This property does not define global responses for
+   all operations.
+   */
+  responses?: ResponsesDefinitions;
+
+  /*
+   Security scheme definitions that can be used across the
+   specification.
+   */
+  securityDefinitions?: SecurityDefinitions;
+
+  /*
+   A declaration of which security schemes are applied for the API as a whole. The list of values describes alternative
+   security schemes that can be used (that is, there is a logical OR between the security requirements). Individual
+   operations can override this definition.
+   */
+  security?: SecurityRequirement;
+
+  /*
+   A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on
+   their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that
+   are not declared may be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
+   */
+  tags?: Tag;
+
+  /*
+   Additional external documentation.
+   */
+  externalDocs?: ExternalDocumentation;
+}
+
+/*
+ The object provides metadata about the API. The metadata can be used by the clients if needed, and can be presented in
+ the Swagger-UI for convenience.
+ */
+export interface Info {
+  title: string;           // The title of the application.
+  description?: string;    // A short description of the application. GFM syntax can be used for rich text representation.
+  termsOfService?: string; // The Terms of Service for the API.
+  contact?: Contact;       // The contact information for the exposed API.
+  license?: License;       // The license information for the exposed API.
+  version: string;         // Provides the version of the application API (not to be confused with the specification version).
+}
+
+// Contact information for the exposed API.
+export interface Contact {
+  name?: string;  // The identifying name of the contact person/organization.
+  url?: string;   // The URL pointing to the contact information. MUST be in the format of a URL.
+  email?: string; // The email address of the contact person/organization. MUST be in the format of an email address.
+}
+
+// License information for the exposed API.
+export interface License {
+  name: string; // The license name used for the API.
+  url?: string; // A URL to the license used for the API. MUST be in the format of a URL.
+}
+
+/*
+ Holds the relative paths to the individual endpoints. The path is appended to the basePath in order to construct the
+ full URL. The Paths may be empty, due to ACL constraints.
+ */
+export interface Paths {
+  /*
+   A relative path to an individual endpoint. The field name MUST begin with a slash. The path is appended to the
+   basePath in order to construct the full URL. PathItem templating is allowed.
+   */
+  [ path: string ]: PathItem;
+}
+
+/*
+ Describes the operations available on a single path. A Path Item may be empty, due to ACL constraints. The path itself
+ is still exposed to the documentation viewer but they will not know which operations and parameters are available.
+ */
+//noinspection ReservedWordAsName
+export interface PathItem {
+  '$ref'?: Operation;
+  get?: Operation;
+  put?: Operation;
+  post?: Operation;
+  delete?: Operation;
+  options?: Operation;
+  head?: Operation;
+  patch?: Operation;
+  parameters?: Operation;
+  [method: string]: Operation;
+}
+
+export interface Definitions {
+
+}
+
+export interface ParametersDefinitions {
+
+}
+
+export interface ResponsesDefinitions {
+
+}
+
+export interface SecurityDefinitions {
+
+}
+
+export interface SecurityRequirement {
+
+}
+
+export interface Tag {
+
+}
+
+export interface ExternalDocumentation {
+
+}
 
 export interface Definition {
   '$ref'?: string;
@@ -38,6 +231,8 @@ export interface Definition {
   format?: DataFormat;
   schema?: any;
   required?: boolean;
+  items?: any;
+  collectionFormat?: string;
 }
 
 //noinspection ReservedWordAsName
@@ -61,40 +256,5 @@ export interface Operation {
   produces?: string[];
   parameters?: Parameter[];
   responses: { [ statusCode: string ]: Response };
-}
-
-export interface Path {
-  [ method: string ]: Operation; // method = 'get' | 'post' | 'put' | 'delete' | 'patch';
-}
-
-export interface License {
-  name: string;
-  url?: string;
-}
-
-export interface Contact {
-  name: string;
-  email: string;
-  url: string;
-}
-
-export interface Info {
-  title: string;
-  version: string;
-  license?: License;
-  contact?: Contact;
-  description?: string;
-  termsOfService?: string;
-}
-
-export interface Document {
-  swagger: '2.0';
-  info: Info;
-  basePath?: string;
-  host?: string;
-  schemes?: string[];
-  consumes?: string[];
-  produces?: string[];
-  paths: { [ path: string ]: Path };
-  definitions?: any;
+  security?: any;
 }

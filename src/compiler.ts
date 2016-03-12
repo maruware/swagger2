@@ -31,7 +31,7 @@
 import * as jsonValidator from 'is-my-json-valid';
 import * as deref from 'json-schema-deref-sync';
 
-import {Path, Document, Definition} from './schema';
+import {PathItem, Document, Definition} from './schema';
 
 export interface Compiled {
   (path: string): CompiledPath;
@@ -43,7 +43,7 @@ export interface CompiledDefinition extends Definition {
 
 export interface CompiledPath {
   regex: RegExp;
-  path: Path;
+  path: PathItem;
   name: string;
   expected: string[];
 }
