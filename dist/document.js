@@ -26,11 +26,11 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-const YAML = require('yamljs');
-const jsonValidator = require('is-my-json-valid');
-const fs = require('fs');
+var YAML = require('yamljs');
+var jsonValidator = require('is-my-json-valid');
+var fs = require('fs');
 // build a swagger validator from the official v2.0 schema
-const schemaValidator = jsonValidator(JSON.parse(fs.readFileSync(__dirname + '/schema.json', 'utf8')));
+var schemaValidator = jsonValidator(JSON.parse(fs.readFileSync(__dirname + '/schema.json', 'utf8')));
 /*
  * Validate a swagger document against the 2.0 schema, returning a typed Document object.
  */

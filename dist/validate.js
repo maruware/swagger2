@@ -1,9 +1,9 @@
 // validate.js
 "use strict";
 function validate(value, schema) {
-    let valid = schema.validator(value);
+    var valid = schema.validator(value);
     if (!valid) {
-        return {
+        var error = {
             actual: value,
             expected: {
                 schema: schema.schema,
@@ -11,53 +11,72 @@ function validate(value, schema) {
                 format: schema.format
             }
         };
+        if (error.expected.schema === undefined) {
+            delete error.expected.schema;
+        }
+        if (error.expected.type === undefined) {
+            delete error.expected.type;
+        }
+        if (error.expected.format === undefined) {
+            delete error.expected.format;
+        }
+        return error;
     }
 }
 function request(compiledPath, method, query, body) {
     // get operation object for path and method
-    let operation = compiledPath.path[method.toLowerCase()];
+    var operation = compiledPath.path[method.toLowerCase()];
     if (operation === undefined) {
         // operation not defined, return 405 (method not allowed)
         return undefined;
     }
-    let parameters = operation.parameters;
+    var parameters = operation.parameters;
     // check all the parameters match swagger schema
     if (parameters === undefined) {
         return [];
     }
-    let validationErrors = [];
-    parameters.forEach(parameter => {
-        let value;
+    var validationErrors = [], bodyDefined = false;
+    parameters.forEach(function (parameter) {
+        var value;
         switch (parameter.in) {
             case 'query':
-                value = query[parameter.name];
+                value = (query || {})[parameter.name];
                 break;
             case 'path':
-                let actual = compiledPath.name.match(/[^\/]+/g);
-                let valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
+                var actual = compiledPath.name.match(/[^\/]+/g);
+                var valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
                 value = actual[valueIndex];
                 if (valueIndex === -1 || valueIndex >= actual.length) {
-                    throw Error(`Cannot obtain path parameter ${parameter.name} from ${compiledPath}`);
+                    throw Error("Cannot obtain path parameter " + parameter.name + " from " + compiledPath);
                 }
                 break;
             case 'body':
                 value = body;
+                bodyDefined = true;
                 break;
             default:
         }
-        let error = validate(value, parameter);
+        var error = validate(value, parameter);
         if (error !== undefined) {
             error.where = parameter.in;
             validationErrors.push(error);
         }
     });
+    // ensure body is undefined if no body schema is defined
+    if (!bodyDefined && body !== undefined) {
+        var error = validate(body, { validator: function (value) { return value === undefined; } });
+        if (error !== undefined) {
+            error.where = 'body';
+            validationErrors.push(error);
+        }
+    }
     return validationErrors;
 }
 exports.request = request;
 function response(compiledPath, method, status, body) {
-    let operation = compiledPath.path[method.toLowerCase()];
+    var operation = compiledPath.path[method.toLowerCase()];
     // check the response matches the swagger schema
-    let response = operation.responses[status];
+    var response = operation.responses[status];
     if (response === undefined) {
         response = operation.responses['default'];
     }

@@ -40,7 +40,7 @@ export interface ValidationError {
 function validate(value: any, schema: CompiledDefinition): ValidationError {
   let valid = schema.validator(value);
   if (!valid) {
-    return {
+    let error: ValidationError = {
       actual: value,
       expected: {
         schema: schema.schema,
@@ -48,10 +48,21 @@ function validate(value: any, schema: CompiledDefinition): ValidationError {
         format: schema.format
       }
     };
+
+    if (error.expected.schema === undefined) {
+      delete error.expected.schema;
+    }
+    if (error.expected.type === undefined) {
+      delete error.expected.type;
+    }
+    if (error.expected.format === undefined) {
+      delete error.expected.format;
+    }
+    return error;
   }
 }
 
-export function request(compiledPath: CompiledPath, method: string, query: any, body: any): ValidationError[] {
+export function request(compiledPath: CompiledPath, method: string, query?: any, body?: any): ValidationError[] {
 
   // get operation object for path and method
   let operation = compiledPath.path[method.toLowerCase()];
@@ -68,14 +79,14 @@ export function request(compiledPath: CompiledPath, method: string, query: any, 
     return [];
   }
 
-  let validationErrors: ValidationError[] = [];
+  let validationErrors: ValidationError[] = [], bodyDefined = false;
 
   parameters.forEach(parameter => {
 
     let value: any;
     switch (parameter.in) {
       case 'query':
-        value = query[parameter.name];
+        value = (query || {})[parameter.name];
         break;
       case 'path':
         let actual = compiledPath.name.match(/[^\/]+/g);
@@ -89,6 +100,7 @@ export function request(compiledPath: CompiledPath, method: string, query: any, 
         break;
       case 'body':
         value = body;
+        bodyDefined = true;
         break;
       default:
       // do nothing
@@ -101,11 +113,20 @@ export function request(compiledPath: CompiledPath, method: string, query: any, 
     }
   });
 
+  // ensure body is undefined if no body schema is defined
+  if (!bodyDefined && body !== undefined) {
+    let error = validate(body, { validator: (value: any) => value === undefined });
+    if (error !== undefined) {
+      error.where = 'body';
+      validationErrors.push(error);
+    }
+  }
+
   return validationErrors;
 }
 
 
-export function response(compiledPath: CompiledPath, method: string, status: number, body: any): ValidationError {
+export function response(compiledPath: CompiledPath, method: string, status: number, body?: any): ValidationError {
   let operation = compiledPath.path[method.toLowerCase()];
 
   // check the response matches the swagger schema

@@ -9,6 +9,7 @@ module.exports = function (wallaby) {
       {pattern: 'test/**'},
       {pattern: 'src/**/*.ts'},
       {pattern: 'src/**/*.json'},
+      {pattern: 'src/**/*.yaml'},
       {pattern: 'src/**/*.spec.ts', ignore: true}
     ],
 

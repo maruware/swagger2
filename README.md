@@ -2,8 +2,15 @@
 [![Coverage Status](https://coveralls.io/repos/github/carlansley/swagger2/badge.svg?branch=master)](https://coveralls.io/github/carlansley/swagger2?branch=master)
 
 # swagger2
-Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents.  It is designed to
-run in environments with node v5.x and above.
+Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents.
+
+## Benefits
+
+* Fast.  Pre-compiled regular expressions and code generation used to validate the inputs and outputs
+of Swagger 2.0 operations qt run-time.
+* Typed.  swagger2 is implemented in TypeScript 1.8+, including a fully annotated TypeScript definition of
+the Swagger 2.0 document object.  Makes working with Swagger objects more pleasant in the IDE of your
+choosing (WebStorm, Atom, etc).
 
 ## Installation
 
@@ -19,7 +26,7 @@ Basic loading and validation of swagger 2.0 document:
 import * as swagger from 'swagger2';
 
 // load YAML swagger file
-const documnet = swagger.loadDocumentSync('./swagger.yml');
+const document = swagger.loadDocumentSync('./swagger.yml');
 
 // validate document
 if (!swagger.validateDocument(document)) {
@@ -98,14 +105,8 @@ function createKoaMiddleware(document: swagger.Document) {
 
 ## Limitations
 
-* requires node v5.4 or above
 * currently only supports synchronous loading (via swagger.loadDocumentSync)
 * does not support all Swagger 2.0 features (e.g. files)
-* swagger2 is written in Typescript 1.8+, targeting ES6.  Recommended to run in an environment with the following nodejs parameters:
-
-```shell
-node --harmony --harmony_default_parameters --harmony_destructuring
-```
 
 ## Development
 

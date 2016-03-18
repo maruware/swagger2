@@ -596,7 +596,7 @@ function validate(raw: any): schema.Document {
 }
 
 function ok(expected: schema.Document, name: string) {
-  return assert.deepEqual(expected, validate(load(name)));
+  return assert.deepStrictEqual(validate(load(name)), expected);
 }
 
 describe('document', () => {
@@ -610,12 +610,12 @@ describe('document', () => {
 
   describe('validateDocument', () => {
     it('fail validation on empty object', done => {
-      assert.equal(document.validateDocument({}), undefined);
+      assert.deepStrictEqual(document.validateDocument({}), undefined);
       done();
     });
 
     it('succeed validation on minimal Swagger v2.0 documents', () => {
-      assert.deepEqual(document.validateDocument(MINIMAL_SWAGGER_DOCUMENT), MINIMAL_SWAGGER_DOCUMENT);
+      assert.deepStrictEqual(document.validateDocument(MINIMAL_SWAGGER_DOCUMENT), MINIMAL_SWAGGER_DOCUMENT);
     });
 
     it('succeeds validation on petstore', () => ok(PETSTORE_DOCUMENT, 'petstore.yaml'));

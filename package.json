@@ -32,9 +32,9 @@
     "mocha": "^2.4.5",
     "nock": "^7.2.2",
     "remap-istanbul": "^0.5.1",
-    "tslint": "^3.5.0",
-    "typescript": "^1.8.7",
-    "typings": "^0.7.7"
+    "tslint": "^3.6.0",
+    "typescript": "^1.8.9",
+    "typings": "^0.7.9"
   },
   "maintainers": [
     {
@@ -48,7 +48,7 @@
     "postversion": "git push && git push --tags",
     "prepublish": "typings install",
     "build": "rm -rf build && tsc && cp src/schema.json build",
-    "dist": "rm -rf dist && tsc typings/main.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es6 -d --pretty --noImplicitAny && cp src/schema.json dist",
+    "dist": "rm -rf dist && tsc typings/main.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 -d --pretty --noImplicitAny && cp src/schema.json dist",
     "clean": "rm -rf build && rm -rf typings && rm -rf coverage && rm -rf node_modules",
     "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts src/**/**/**/*.ts",
     "test": "npm run lint && npm run build && node --harmony --harmony_default_parameters --harmony_destructuring node_modules/.bin/_mocha --require expectations $(find build -name '*.spec.js')",

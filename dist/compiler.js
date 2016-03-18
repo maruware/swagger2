@@ -26,33 +26,33 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-const jsonValidator = require('is-my-json-valid');
-const deref = require('json-schema-deref-sync');
+var jsonValidator = require('is-my-json-valid');
+var deref = require('json-schema-deref-sync');
 function compile(document) {
     // get the de-referenced version of the swagger document
-    let swagger = deref(document);
+    var swagger = deref(document);
     // add a validator for every parameter in swagger document
-    Object.keys(swagger.paths).forEach(pathName => {
-        let path = swagger.paths[pathName];
-        Object.keys(path).forEach(operationName => {
-            let operation = path[operationName];
-            (operation.parameters || []).forEach((parameter) => {
+    Object.keys(swagger.paths).forEach(function (pathName) {
+        var path = swagger.paths[pathName];
+        Object.keys(path).forEach(function (operationName) {
+            var operation = path[operationName];
+            (operation.parameters || []).forEach(function (parameter) {
                 parameter.validator = jsonValidator(parameter.schema || parameter);
             });
-            Object.keys(operation.responses).forEach(statusCode => {
-                let response = operation.responses[statusCode];
+            Object.keys(operation.responses).forEach(function (statusCode) {
+                var response = operation.responses[statusCode];
                 if (response.schema) {
                     response.validator = jsonValidator(response.schema);
                 }
                 else {
-                    // no schema, so ensure there is no response
-                    response.validator = (body) => body === undefined;
+                    // no Definition, so ensure there is no response
+                    response.validator = function (body) { return body === undefined; };
                 }
             });
         });
     });
-    let matcher = Object.keys(swagger.paths)
-        .map(name => {
+    var matcher = Object.keys(swagger.paths)
+        .map(function (name) {
         return {
             name: name,
             path: swagger.paths[name],
@@ -60,9 +60,9 @@ function compile(document) {
             expected: name.match(/[^\/]+/g)
         };
     });
-    return (path) => {
+    return function (path) {
         // get a list of matching paths, there should be only one
-        let matches = matcher.filter(match => !!path.match(match.regex));
+        var matches = matcher.filter(function (match) { return !!path.match(match.regex); });
         if (matches.length === 1) {
             return matches[0];
         }

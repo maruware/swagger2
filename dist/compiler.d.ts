@@ -1,13 +1,13 @@
-import { Path, Document, Schema } from './schema';
+import { PathItem, Document, Definition } from './schema';
 export interface Compiled {
     (path: string): CompiledPath;
 }
-export interface CompiledSchema extends Schema {
+export interface CompiledDefinition extends Definition {
     validator?: (value: any) => boolean;
 }
 export interface CompiledPath {
     regex: RegExp;
-    path: Path;
+    path: PathItem;
     name: string;
     expected: string[];
 }

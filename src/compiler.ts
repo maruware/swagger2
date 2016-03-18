@@ -62,8 +62,8 @@ export function compile(document: Document): Compiled {
       });
       Object.keys(operation.responses).forEach(statusCode => {
         let response = operation.responses[statusCode];
-        if (response.Definition) {
-          response.validator = jsonValidator(response.Definition);
+        if (response.schema) {
+          response.validator = jsonValidator(response.schema);
         } else {
           // no Definition, so ensure there is no response
           response.validator = (body: any) => body === undefined;

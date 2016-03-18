@@ -29,9 +29,9 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-const validate = require('./validate');
-const document = require('./document');
-const compiler = require('./compiler');
+var validate = require('./validate');
+var document = require('./document');
+var compiler = require('./compiler');
 /* tslint:enable:no-unused-variable */
 exports.loadDocumentSync = document.loadDocumentSync;
 exports.validateDocument = document.validateDocument;

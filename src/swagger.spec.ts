@@ -33,4 +33,143 @@ describe('swagger2', () => {
   it('has a validateRequest function', () => assert.equal(typeof swagger.validateRequest, 'function'));
   it('has a validateResponse function', () => assert.equal(typeof swagger.validateResponse, 'function'));
   it('has a compileDocument function', () => assert.equal(typeof swagger.compileDocument, 'function'));
+
+  describe('petstore', () => {
+    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore.yaml');
+    const document: swagger.Document = swagger.validateDocument(raw);
+
+    // construct a validation object, pre-compiling all schema and regex required
+    let compiled = swagger.compileDocument(document);
+
+    it('invalid paths are undefined', () => {
+      assert.equal(undefined, compiled('/v1/bad'));
+      assert.equal(undefined, compiled('/v2/pets'));
+    });
+
+    it('compiles valid paths', () => {
+      let compiledPath = compiled('/v1/pets');
+      assert.equal(compiledPath.name, '/pets');
+      assert.equal(compiledPath.path.get.summary, 'List all pets');
+    });
+
+    describe('/v1/pets', () => {
+      let compiledPath = compiled('/v1/pets');
+
+      it('do not allow PUTs or DELETEs', () => {
+        assert.equal(undefined, swagger.validateRequest(compiledPath, 'put', {}, {}));
+        assert.equal(undefined, swagger.validateRequest(compiledPath, 'delete', {}, {}));
+      });
+
+      describe('get', () => {
+
+        it('limit must be a number', () => {
+          assert.deepStrictEqual([{
+            actual: 'hello',
+            expected: {type: 'integer', format: 'int32'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath, 'get', {limit: 'hello'}));
+
+          assert.deepStrictEqual([{
+            actual: 23.3,
+            expected: {type: 'integer', format: 'int32'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath, 'get', {limit: 23.3}));
+        });
+
+        it('body must be empty', () => {
+          assert.deepStrictEqual([{
+            actual: {x: 'hello'},
+            expected: {},
+            where: 'body'
+          }], swagger.validateRequest(compiledPath, 'get', undefined, {x: 'hello'}));
+        });
+
+        it('ok with no limit', () => assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get')));
+        it('ok with valid limit', () => assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get', {limit: 50})));
+        it('invalid method response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 201,
+          {code: 'hello'}), {
+          'actual': {'code': 'hello'},
+          'expected': {
+            'schema': {
+              'required': ['code', 'message'],
+              'properties': {'code': {'type': 'integer', 'format': 'int32'}, 'message': {'type': 'string'}}
+            }
+          }
+        }));
+
+        it('invalid object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, {bad: 'object'}), {
+          'actual': {'bad': 'object'},
+          'expected': {
+            'schema': {
+              'type': 'array',
+              'items': {
+                'required': ['id', 'name'],
+                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+              }
+            }
+          }
+        }));
+
+        it('invalid array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200,
+          [{bad: 'value'}]), {
+          'actual': [{'bad': 'value'}],
+          'expected': {
+            'schema': {
+              'type': 'array',
+              'items': {
+                'required': ['id', 'name'],
+                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+              }
+            }
+          }
+        }));
+
+        it('invalid pet object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
+          id: 'abc', name: 'hello'
+        }]), {
+          'actual': [{'id': 'abc', 'name': 'hello'}],
+          'expected': {
+            'schema': {
+              'type': 'array',
+              'items': {
+                'required': ['id', 'name'],
+                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+              }
+            }
+          }
+        }));
+
+        it('valid error response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 400, {
+          code: 32,
+          message: 'message'
+        }), undefined));
+
+        it('valid empty array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, []), undefined));
+        it('valid array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
+          id: 3, name: 'hello'
+        }]), undefined));
+
+      });
+    });
+
+    describe('/v1/pets/{petId}', () => {
+
+      it('do not allow POSTs, PUTs or DELETEs', () => {
+        let compiledPath = compiled('/v1/pets/3');
+        assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', {}, {}), undefined);
+        assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {}, {}), undefined);
+        assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'delete', {}, {}), undefined);
+      });
+
+      describe('get', () => {
+        it('petId must return an array of pet objects', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get'));
+          assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
+            id: 3, name: 'hello'
+          }]), undefined);
+        });
+      });
+    });
+  });
 });
