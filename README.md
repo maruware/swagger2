@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/carlansley/swagger2.svg?branch=master)](https://travis-ci.org/carlansley/swagger2)
 [![Coverage Status](https://coveralls.io/repos/github/carlansley/swagger2/badge.svg?branch=master)](https://coveralls.io/github/carlansley/swagger2?branch=master)
+[![Dependencies](https://david-dm.org/carlansley/swagger2.svg)](https://raw.githubusercontent.com/carlansley/swagger2/master/package.json)
 
 # swagger2
 Loading, parsing and validating requests to HTTP services based on Swagger v2.0 documents.
