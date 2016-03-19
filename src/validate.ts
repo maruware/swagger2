@@ -109,12 +109,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
       case 'path':
         let actual = compiledPath.name.match(/[^\/]+/g);
         let valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
-
         value = actual[valueIndex];
-
-        if (valueIndex === -1 || valueIndex >= actual.length) {
-          throw Error(`Cannot obtain path parameter ${parameter.name} from ${compiledPath}`);
-        }
         break;
       case 'body':
         value = body;

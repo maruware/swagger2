@@ -8,7 +8,7 @@ Loading, parsing and validating requests to HTTP services based on Swagger v2.0 
 ## Benefits
 
 * Fast.  Pre-compiled regular expressions and code generation used to validate the inputs and outputs
-of Swagger 2.0 operations qt run-time.
+of Swagger 2.0 operations at run-time.
 * Typed.  swagger2 is implemented in TypeScript 1.8+, including a fully annotated TypeScript definition of
 the Swagger 2.0 document object.  Makes working with Swagger objects more pleasant in the IDE of your
 choosing (WebStorm, Atom, etc).

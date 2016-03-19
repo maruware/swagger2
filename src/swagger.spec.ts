@@ -212,4 +212,22 @@ describe('swagger2', () => {
       });
     });
   });
+
+
+  describe('petstore-separate', () => {
+    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore-separate/spec/swagger.yaml');
+    const document: swagger.Document = swagger.validateDocument(raw);
+    let compiled = swagger.compileDocument(document);
+
+    describe('/api/pets', () => {
+      let compiledPath = compiled('/api/pets');
+
+      // console.log(compiledPath.path.post.parameters[0].schema);
+
+      describe('post', () => {
+        assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', {}, { x: 'y' }), []);
+      });
+    });
+
+  });
 });

@@ -49,6 +49,6 @@ export function validateDocument(document: any): Document {
 /*
  * Load a swagger document.  We only support YAML for now.
  */
-export function loadDocumentSync(file: string): Document {
+export function loadDocumentSync(file: string): any {
   return YAML.load(file);
 }
