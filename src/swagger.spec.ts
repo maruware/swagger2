@@ -60,6 +60,34 @@ describe('swagger2', () => {
         assert.equal(undefined, swagger.validateRequest(compiledPath, 'delete', {}, {}));
       });
 
+      describe('post', () => {
+
+        it('body must be empty', () => {
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', undefined, {x: 'hello'}), [{
+            actual: {x: 'hello'},
+            expected: {},
+            where: 'body'
+          }]);
+        });
+
+        it('parameters must be empty', () => {
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', {x: 'y'}), [{
+            where: 'query',
+            name: 'x',
+            actual: 'y',
+            expected: {}
+          }]);
+        });
+
+        it('succeed if request valid', () => {
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post'), []);
+        });
+
+        it('succeed if response valid', () => {
+          assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'post', 201), undefined);
+        });
+      });
+
       describe('get', () => {
 
         it('limit must be a number', () => {
@@ -104,7 +132,11 @@ describe('swagger2', () => {
               'type': 'array',
               'items': {
                 'required': ['id', 'name'],
-                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+                'properties': {
+                  'id': {'type': 'integer', 'format': 'int64'},
+                  'name': {'type': 'string'},
+                  'tag': {'type': 'string'}
+                }
               }
             }
           }
@@ -118,7 +150,11 @@ describe('swagger2', () => {
               'type': 'array',
               'items': {
                 'required': ['id', 'name'],
-                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+                'properties': {
+                  'id': {'type': 'integer', 'format': 'int64'},
+                  'name': {'type': 'string'},
+                  'tag': {'type': 'string'}
+                }
               }
             }
           }
@@ -133,7 +169,11 @@ describe('swagger2', () => {
               'type': 'array',
               'items': {
                 'required': ['id', 'name'],
-                'properties': {'id': {'type': 'integer', 'format': 'int64'}, 'name': {'type': 'string'}, 'tag': {'type': 'string'}}
+                'properties': {
+                  'id': {'type': 'integer', 'format': 'int64'},
+                  'name': {'type': 'string'},
+                  'tag': {'type': 'string'}
+                }
               }
             }
           }

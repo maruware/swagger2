@@ -1,6 +1,7 @@
 import { CompiledPath } from './compiler';
 export interface ValidationError {
     where?: string;
+    name?: string;
     actual: any;
     expected: any;
 }

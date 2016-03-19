@@ -45,7 +45,7 @@ function compile(document) {
                     response.validator = jsonValidator(response.schema);
                 }
                 else {
-                    // no Definition, so ensure there is no response
+                    // no schema, so ensure there is no response
                     response.validator = function (body) { return body === undefined; };
                 }
             });

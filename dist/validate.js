@@ -31,11 +31,26 @@ function request(compiledPath, method, query, body) {
         return undefined;
     }
     var parameters = operation.parameters;
+    var validationErrors = [], bodyDefined = false;
     // check all the parameters match swagger schema
     if (parameters === undefined) {
-        return [];
+        var error = validate(body, { validator: function (value) { return value === undefined; } });
+        if (error !== undefined) {
+            error.where = 'body';
+            validationErrors.push(error);
+        }
+        if (query !== undefined && Object.keys(query).length > 0) {
+            Object.keys(query).forEach(function (key) {
+                validationErrors.push({
+                    where: 'query',
+                    name: key,
+                    actual: query[key],
+                    expected: {}
+                });
+            });
+        }
+        return validationErrors;
     }
-    var validationErrors = [], bodyDefined = false;
     parameters.forEach(function (parameter) {
         var value;
         switch (parameter.in) {

@@ -32,6 +32,7 @@ import {CompiledPath, CompiledDefinition} from './compiler';
 
 export interface ValidationError {
   where?: string;
+  name?: string;
   actual: any;
   expected: any;
 }
@@ -73,13 +74,30 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
   }
 
   let parameters = operation.parameters;
+  let validationErrors: ValidationError[] = [], bodyDefined = false;
 
   // check all the parameters match swagger schema
   if (parameters === undefined) {
-    return [];
-  }
 
-  let validationErrors: ValidationError[] = [], bodyDefined = false;
+    let error = validate(body, {validator: (value: any) => value === undefined});
+    if (error !== undefined) {
+      error.where = 'body';
+      validationErrors.push(error);
+    }
+
+    if (query !== undefined && Object.keys(query).length > 0) {
+      Object.keys(query).forEach(key => {
+        validationErrors.push({
+          where: 'query',
+          name: key,
+          actual: query[key],
+          expected: {}
+        });
+      });
+    }
+
+    return validationErrors;
+  }
 
   parameters.forEach(parameter => {
 
@@ -115,7 +133,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
 
   // ensure body is undefined if no body schema is defined
   if (!bodyDefined && body !== undefined) {
-    let error = validate(body, { validator: (value: any) => value === undefined });
+    let error = validate(body, {validator: (value: any) => value === undefined});
     if (error !== undefined) {
       error.where = 'body';
       validationErrors.push(error);
