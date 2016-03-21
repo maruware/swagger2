@@ -1,5 +1,8 @@
 // validate.js
 "use strict";
+function isEmpty(value) {
+    return value === undefined || value === '' || Object.keys(value).length === 0;
+}
 function validate(value, schema) {
     var valid = schema.validator(value);
     if (!valid) {
@@ -34,7 +37,7 @@ function request(compiledPath, method, query, body) {
     var validationErrors = [], bodyDefined = false;
     // check all the parameters match swagger schema
     if (parameters === undefined) {
-        var error = validate(body, { validator: function (value) { return value === undefined; } });
+        var error = validate(body, { validator: isEmpty });
         if (error !== undefined) {
             error.where = 'body';
             validationErrors.push(error);
@@ -76,7 +79,7 @@ function request(compiledPath, method, query, body) {
     });
     // ensure body is undefined if no body schema is defined
     if (!bodyDefined && body !== undefined) {
-        var error = validate(body, { validator: function (value) { return value === undefined; } });
+        var error = validate(body, { validator: isEmpty });
         if (error !== undefined) {
             error.where = 'body';
             validationErrors.push(error);
