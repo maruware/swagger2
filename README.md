@@ -106,8 +106,10 @@ function createKoaMiddleware(document: swagger.Document) {
 
 ## Limitations
 
-* currently only supports synchronous loading (via swagger.loadDocumentSync)
-* does not support all Swagger 2.0 features (e.g. files)
+* currently only supports synchronous loading of full documents (via swagger.loadDocumentSync)
+* does not support validation of header fields
+* does not support validation of file attachments
+* does not support validation of mime-types
 
 ## Development
 
