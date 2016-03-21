@@ -61,9 +61,6 @@ function request(compiledPath, method, query, body) {
                 var actual = compiledPath.name.match(/[^\/]+/g);
                 var valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
                 value = actual[valueIndex];
-                if (valueIndex === -1 || valueIndex >= actual.length) {
-                    throw Error("Cannot obtain path parameter " + parameter.name + " from " + compiledPath);
-                }
                 break;
             case 'body':
                 value = body;
