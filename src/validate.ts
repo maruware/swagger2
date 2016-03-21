@@ -37,6 +37,9 @@ export interface ValidationError {
   expected: any;
 }
 
+function isEmpty(value: any) {
+  return value === undefined || value === '' || Object.keys(value).length === 0;
+}
 
 function validate(value: any, schema: CompiledDefinition): ValidationError {
   let valid = schema.validator(value);
@@ -79,7 +82,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
   // check all the parameters match swagger schema
   if (parameters === undefined) {
 
-    let error = validate(body, {validator: (value: any) => value === undefined});
+    let error = validate(body, {validator: isEmpty});
     if (error !== undefined) {
       error.where = 'body';
       validationErrors.push(error);
@@ -128,7 +131,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
 
   // ensure body is undefined if no body schema is defined
   if (!bodyDefined && body !== undefined) {
-    let error = validate(body, {validator: (value: any) => value === undefined});
+    let error = validate(body, {validator: isEmpty});
     if (error !== undefined) {
       error.where = 'body';
       validationErrors.push(error);
