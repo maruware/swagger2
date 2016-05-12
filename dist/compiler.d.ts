@@ -1,8 +1,11 @@
-import { PathItem, Document, Definition } from './schema';
+import { PathItem, Document, Definition, Parameter } from './schema';
 export interface Compiled {
     (path: string): CompiledPath;
 }
 export interface CompiledDefinition extends Definition {
+    validator?: (value: any) => boolean;
+}
+export interface CompiledParameter extends Parameter {
     validator?: (value: any) => boolean;
 }
 export interface CompiledPath {

@@ -28,6 +28,37 @@
  */
 var jsonValidator = require('is-my-json-valid');
 var deref = require('json-schema-deref-sync');
+/*
+ * We need special handling for query validation, since they're all strings.
+ * e.g. we must treat "5" as a valid number
+ */
+function queryValidator(schema) {
+    var validator = jsonValidator(schema);
+    return function (value) {
+        if (value === undefined) {
+            return validator();
+        }
+        switch (schema.type) {
+            case 'number':
+            case 'integer':
+                if (!isNaN(value)) {
+                    // if the value is a number, make sure it's a number
+                    value = +value;
+                }
+                break;
+            case 'boolean':
+                if (value === 'true') {
+                    value = true;
+                }
+                else if (value === 'false') {
+                    value = false;
+                }
+                break;
+            default:
+        }
+        return validator(value);
+    };
+}
 function compile(document) {
     // get the de-referenced version of the swagger document
     var swagger = deref(document);
@@ -37,7 +68,13 @@ function compile(document) {
         Object.keys(path).forEach(function (operationName) {
             var operation = path[operationName];
             (operation.parameters || []).forEach(function (parameter) {
-                parameter.validator = jsonValidator(parameter.schema || parameter);
+                var schema = parameter.schema || parameter;
+                if (parameter.in === 'query') {
+                    parameter.validator = queryValidator(schema);
+                }
+                else {
+                    parameter.validator = jsonValidator(schema);
+                }
             });
             Object.keys(operation.responses).forEach(function (statusCode) {
                 var response = operation.responses[statusCode];
