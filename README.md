@@ -110,6 +110,7 @@ function createKoaMiddleware(document: swagger.Document) {
 * does not support validation of header fields
 * does not support validation of file attachments
 * does not support validation of mime-types
+* requires node v6.0 or above
 
 ## Development
 

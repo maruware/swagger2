@@ -23,10 +23,7 @@ module.exports = function (wallaby) {
 
     env: {
       type: 'node',
-      runner: 'node',
-      params: {
-        runner: '--harmony --harmony_default_parameters --harmony_destructuring'
-      }
+      runner: 'node'
     }
   };
 };

@@ -60,6 +60,16 @@ const PETSTORE_DOCUMENT: schema.Document = {
           'required': false,
           'type': 'integer',
           'format': 'int32'
+        }, {
+          'name': 'numberLimit',
+          'in': 'query',
+          'required': false,
+          'type': 'number'
+        }, {
+          'name': 'booleanLimit',
+          'in': 'query',
+          'required': false,
+          'type': 'boolean'
         }],
         'responses': {
           '200': {
@@ -73,6 +83,19 @@ const PETSTORE_DOCUMENT: schema.Document = {
         'summary': 'Create a pet',
         'operationId': 'createPets',
         'tags': ['pets'],
+        'responses': {
+          '201': {'description': 'Null response'},
+          'default': {'description': 'unexpected error', 'schema': {'$ref': '#/definitions/Error'}}
+        }
+      },
+      'put': {
+        'summary': 'Create a pet',
+        'operationId': 'createMultiplePets',
+        'parameters': [{
+          'name': 'pets',
+          'in': 'body',
+          'schema': {'$ref': '#/definitions/Pets'}
+        }],
         'responses': {
           '201': {'description': 'Null response'},
           'default': {'description': 'unexpected error', 'schema': {'$ref': '#/definitions/Error'}}

@@ -55,9 +55,14 @@ describe('swagger2', () => {
     describe('/v1/pets', () => {
       let compiledPath = compiled('/v1/pets');
 
-      it('do not allow PUTs or DELETEs', () => {
-        assert.equal(undefined, swagger.validateRequest(compiledPath, 'put', {}, {}));
+      it('do not allow DELETE', () => {
         assert.equal(undefined, swagger.validateRequest(compiledPath, 'delete', {}, {}));
+      });
+
+      describe('put', () => {
+        it('empty array works', () => {
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', undefined, []), []);
+        });
       });
 
       describe('post', () => {
@@ -102,6 +107,37 @@ describe('swagger2', () => {
             expected: {type: 'integer', format: 'int32'},
             where: 'query'
           }], swagger.validateRequest(compiledPath, 'get', {limit: 23.3}));
+
+          assert.deepStrictEqual([{
+            actual: 'hello',
+            expected: {type: 'number'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath, 'get', {numberLimit: 'hello'}));
+
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {limit: 5}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {numberLimit: 5}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {numberLimit: 5.5}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {limit: '5'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {numberLimit: '5'}), []);
+        });
+
+        it('booleanLimit must be a boolean', () => {
+          assert.deepStrictEqual([{
+            actual: 'hello',
+            expected: {type: 'boolean'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath, 'get', {booleanLimit: 'hello'}));
+
+          assert.deepStrictEqual([{
+            actual: '0',
+            expected: {type: 'boolean'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath, 'get', {booleanLimit: '0'}));
+
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {booleanLimit: true}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {booleanLimit: false}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {booleanLimit: 'true'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {booleanLimit: 'false'}), []);
         });
 
         it('body must be empty', () => {

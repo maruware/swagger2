@@ -31,13 +31,17 @@
 import * as jsonValidator from 'is-my-json-valid';
 import * as deref from 'json-schema-deref-sync';
 
-import {PathItem, Document, Definition} from './schema';
+import {PathItem, Document, Definition, Parameter} from './schema';
 
 export interface Compiled {
   (path: string): CompiledPath;
 }
 
 export interface CompiledDefinition extends Definition {
+  validator?: (value: any) => boolean;
+}
+
+export interface CompiledParameter extends Parameter {
   validator?: (value: any) => boolean;
 }
 
@@ -48,6 +52,43 @@ export interface CompiledPath {
   expected: string[];
 }
 
+
+/*
+ * We need special handling for query validation, since they're all strings.
+ * e.g. we must treat "5" as a valid number
+ */
+function queryValidator(schema: any) {
+  let validator = jsonValidator(schema);
+  return (value: any) => {
+    if (value === undefined) {
+      return validator();
+    }
+
+    switch (schema.type) {
+      case 'number':
+      case 'integer':
+        if (!isNaN(value)) {
+          // if the value is a number, make sure it's a number
+          value = +value;
+        }
+        break;
+
+      case 'boolean':
+        if (value === 'true') {
+          value = true;
+        } else if (value === 'false') {
+          value = false;
+        }
+        break;
+
+      default:
+        // leave as-is
+    }
+    return validator(value);
+  };
+}
+
+
 export function compile(document: Document): Compiled {
   // get the de-referenced version of the swagger document
   let swagger = deref(document);
@@ -57,8 +98,13 @@ export function compile(document: Document): Compiled {
     let path = swagger.paths[pathName];
     Object.keys(path).forEach(operationName => {
       let operation = path[operationName];
-      (operation.parameters || []).forEach((parameter: CompiledDefinition) => {
-        parameter.validator = jsonValidator(parameter.schema || parameter);
+      (operation.parameters || []).forEach((parameter: CompiledParameter) => {
+        let schema = parameter.schema || parameter;
+        if (parameter.in === 'query') {
+          parameter.validator = queryValidator(schema);
+        } else {
+          parameter.validator = jsonValidator(schema);
+        }
       });
       Object.keys(operation.responses).forEach(statusCode => {
         let response = operation.responses[statusCode];
