@@ -102,7 +102,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
     return validationErrors;
   }
 
-  parameters.forEach(parameter => {
+  parameters.forEach((parameter: any) => {
 
     let value: any;
     switch (parameter.in) {
