@@ -69,7 +69,7 @@ function validate(value: any, schema: CompiledDefinition): ValidationError {
 export function request(compiledPath: CompiledPath, method: string, query?: any, body?: any): ValidationError[] {
 
   // get operation object for path and method
-  let operation = compiledPath.path[method.toLowerCase()];
+  let operation = (<any>compiledPath.path)[method.toLowerCase()];
 
   if (operation === undefined) {
     // operation not defined, return 405 (method not allowed)
@@ -143,7 +143,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
 
 
 export function response(compiledPath: CompiledPath, method: string, status: number, body?: any): ValidationError {
-  let operation = compiledPath.path[method.toLowerCase()];
+  let operation = (<any>compiledPath.path)[method.toLowerCase()];
 
   // check the response matches the swagger schema
   let response = operation.responses[status];
