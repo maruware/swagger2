@@ -49,7 +49,6 @@ export interface PathItem {
     head?: Operation;
     patch?: Operation;
     parameters?: Operation;
-    [method: string]: Operation;
 }
 export interface Definitions {
 }
