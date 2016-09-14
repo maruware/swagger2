@@ -26,6 +26,7 @@
 
 import * as assert from 'assert';
 import * as swagger from './swagger';
+import {Compiled} from './swagger';
 
 describe('swagger2', () => {
   it('has a loadDocumentSync function', () => assert.equal(typeof swagger.loadDocumentSync, 'function'));
@@ -38,12 +39,12 @@ describe('swagger2', () => {
     const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore.yaml');
     const document: swagger.Document | undefined = swagger.validateDocument(raw);
 
-    if (document === undefined) {
-      throw Error();
-    }
+    let compiled: Compiled;
 
-    // construct a validation object, pre-compiling all schema and regex required
-    let compiled = swagger.compileDocument(document);
+    if (document !== undefined) {
+      // construct a validation object, pre-compiling all schema and regex required
+      compiled = swagger.compileDocument(document);
+    }
 
     it('invalid paths are undefined', () => {
       assert.equal(undefined, compiled('/v1/bad'));
@@ -52,11 +53,14 @@ describe('swagger2', () => {
 
     it('compiles valid paths', () => {
       let compiledPath = compiled('/v1/pets');
-      if (compiledPath === undefined) {
-        throw Error();
+      assert.notEqual(compiledPath, undefined);
+      if (compiledPath !== undefined) {
+        assert.equal(compiledPath.name, '/pets');
+        assert.notEqual(compiledPath.path.get, undefined);
+        if (compiledPath.path.get !== undefined) {
+          assert.equal(compiledPath.path.get.summary, 'List all pets');
+        }
       }
-      assert.equal(compiledPath.name, '/pets');
-      assert.equal((compiledPath.path.get || {summary: undefined}).summary, 'List all pets');
     });
 
     describe('/v1/pets', () => {
@@ -64,6 +68,13 @@ describe('swagger2', () => {
 
       it('do not allow DELETE', () => {
         assert.equal(undefined, swagger.validateRequest(compiledPath, 'delete', {}, {}));
+      });
+
+      it('do not allow undefined paths on requests or responses', () => {
+        assert.equal(undefined, swagger.validateRequest(undefined, 'delete', {}, {}));
+        assert.deepStrictEqual(swagger.validateResponse(undefined, 'delete', 201), {
+          actual: 'UNDEFINED_PATH', expected: 'PATH'
+        });
       });
 
       describe('put', () => {
