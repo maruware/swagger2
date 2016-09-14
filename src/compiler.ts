@@ -34,15 +34,15 @@ import * as deref from 'json-schema-deref-sync';
 import {PathItem, Document, Definition, Parameter} from './schema';
 
 export interface Compiled {
-  (path: string): CompiledPath;
+  (path: string): CompiledPath | undefined;
 }
 
 export interface CompiledDefinition extends Definition {
-  validator?: (value: any) => boolean;
+  validator: (value: any) => boolean;
 }
 
 export interface CompiledParameter extends Parameter {
-  validator?: (value: any) => boolean;
+  validator: (value: any) => boolean;
 }
 
 export interface CompiledPath {
@@ -124,15 +124,16 @@ export function compile(document: Document): Compiled {
         name,
         path: swagger.paths[name],
         regex: new RegExp(swagger.basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
-        expected: name.match(/[^\/]+/g)
+        expected: (name.match(/[^\/]+/g) || []).map(s => s.toString())
       };
     });
 
   return (path: string) => {
     // get a list of matching paths, there should be only one
     let matches = matcher.filter(match => !!path.match(match.regex));
-    if (matches.length === 1) {
-      return matches[0];
+    if (matches.length !== 1) {
+      return;
     }
+    return matches[0];
   };
 }

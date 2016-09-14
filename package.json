@@ -22,20 +22,24 @@
   "typings": "./dist/swagger.d.ts",
   "dependencies": {
     "is-my-json-valid": "^2.13.1",
-    "json-refs": "^2.1.5",
-    "json-schema-deref-sync": "^0.3.1",
-    "yamljs": "^0.2.7"
+    "json-refs": "^2.1.6",
+    "json-schema-deref-sync": "^0.3.2",
+    "yamljs": "^0.2.8"
   },
   "devDependencies": {
-    "coveralls": "^2.11.9",
+    "@types/mocha": "^2.2.31",
+    "@types/nock": "^0.54.31",
+    "@types/node": "^6.0.38",
+    "@types/winston": "0.0.27",
+    "@types/yamljs": "^0.2.29",
+    "coveralls": "^2.11.12",
     "expectations": "^0.6.0",
-    "istanbul": "^1.0.0-alpha.2",
-    "mocha": "^2.5.3",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^3.0.2",
     "nock": "^8.0.0",
     "remap-istanbul": "^0.6.4",
-    "tslint": "^3.10.2",
-    "typescript": "^1.8.10",
-    "typings": "^1.0.4"
+    "tslint": "^3.15.1",
+    "typescript": "^2.0.0"
   },
   "maintainers": [
     {
@@ -47,11 +51,10 @@
     "preversion": "npm test",
     "version": "npm run dist && git add -A dist",
     "postversion": "git push && git push --tags",
-    "prepublish": "typings install",
     "build": "rm -rf build && tsc && cp src/schema.json build",
-    "dist": "rm -rf dist && tsc typings/index.d.ts src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 -d --pretty --noImplicitAny && cp src/schema.json dist",
-    "clean": "rm -rf build && rm -rf typings && rm -rf coverage && rm -rf node_modules",
-    "lint": "tslint -c tslint.json src/*.ts src/**/*.ts src/**/**/*.ts src/**/**/**/*.ts",
+    "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 -d --pretty --noImplicitAny && cp src/schema.json dist",
+    "clean": "rm -rf build && rm -rf coverage && rm -rf node_modules",
+    "lint": "tslint -c ./tslint.json $(find src -name '*.ts')",
     "test": "npm run build && _mocha --require expectations $(find build -name '*.spec.js') && npm run lint",
     "cover": "npm run build && npm run cover:istanbul && npm run cover:remap",
     "cover:browser": "npm run cover && istanbul report html && open coverage/coverage-remapped/index.html",

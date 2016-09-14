@@ -41,39 +41,44 @@ function isEmpty(value: any) {
   return value === undefined || value === '' || Object.keys(value).length === 0;
 }
 
-function validate(value: any, schema: CompiledDefinition): ValidationError {
+function validate(value: any, schema: CompiledDefinition): ValidationError | undefined {
   let valid = schema.validator(value);
-  if (!valid) {
-    let error: ValidationError = {
-      actual: value,
-      expected: {
-        schema: schema.schema,
-        type: schema.type,
-        format: schema.format
-      }
-    };
-
-    if (error.expected.schema === undefined) {
-      delete error.expected.schema;
-    }
-    if (error.expected.type === undefined) {
-      delete error.expected.type;
-    }
-    if (error.expected.format === undefined) {
-      delete error.expected.format;
-    }
-    return error;
+  if (valid) {
+    return;
   }
+  let error: ValidationError = {
+    actual: value,
+    expected: {
+      schema: schema.schema,
+      type: schema.type,
+      format: schema.format
+    }
+  };
+
+  if (error.expected.schema === undefined) {
+    delete error.expected.schema;
+  }
+  if (error.expected.type === undefined) {
+    delete error.expected.type;
+  }
+  if (error.expected.format === undefined) {
+    delete error.expected.format;
+  }
+  return error;
 }
 
-export function request(compiledPath: CompiledPath, method: string, query?: any, body?: any): ValidationError[] {
+export function request(compiledPath: CompiledPath | undefined, method: string, query?: any, body?: any): ValidationError[] | undefined {
+
+  if (compiledPath === undefined) {
+    return;
+  }
 
   // get operation object for path and method
   let operation = (<any>compiledPath.path)[method.toLowerCase()];
 
   if (operation === undefined) {
     // operation not defined, return 405 (method not allowed)
-    return undefined;
+    return;
   }
 
   let parameters = operation.parameters;
@@ -112,7 +117,7 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
       case 'path':
         let actual = compiledPath.name.match(/[^\/]+/g);
         let valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
-        value = actual[valueIndex];
+        value = actual ? actual[valueIndex] : undefined;
         break;
       case 'body':
         value = body;
@@ -142,7 +147,15 @@ export function request(compiledPath: CompiledPath, method: string, query?: any,
 }
 
 
-export function response(compiledPath: CompiledPath, method: string, status: number, body?: any): ValidationError {
+export function response(compiledPath: CompiledPath | undefined, method: string, status: number, body?: any): ValidationError | undefined {
+
+  if (compiledPath === undefined) {
+    return {
+      actual: 'UNDEFINED_PATH',
+      expected: 'PATH'
+    };
+  }
+
   let operation = (<any>compiledPath.path)[method.toLowerCase()];
 
   // check the response matches the swagger schema

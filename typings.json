@@ -1,9 +1,0 @@
-{
-  "globalDependencies": {
-    "mocha": "registry:dt/mocha#2.2.5+20160317120654",
-    "nock": "registry:dt/nock#0.54.0+20160423135543",
-    "node": "registry:dt/node#6.0.0+20160602155235",
-    "winston": "registry:dt/winston#0.0.0+20160417152829",
-    "yamljs": "registry:dt/yamljs#0.2.3+20160602141818"
-  }
-}

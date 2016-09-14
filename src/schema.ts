@@ -183,12 +183,12 @@ export interface Paths {
  Describes the operations available on a single path. A Path Item may be empty, due to ACL constraints. The path itself
  is still exposed to the documentation viewer but they will not know which operations and parameters are available.
  */
-//noinspection ReservedWordAsName
 export interface PathItem {
   '$ref'?: Operation;
   get?: Operation;
   put?: Operation;
   post?: Operation;
+  //noinspection ReservedWordAsName
   delete?: Operation;
   options?: Operation;
   head?: Operation;
@@ -234,9 +234,9 @@ export interface Definition {
   collectionFormat?: string;
 }
 
-//noinspection ReservedWordAsName
 export interface Parameter extends Definition {
   name?: string;
+  //noinspection ReservedWordAsName
   in?: ParameterType;
   description?: string;
 }

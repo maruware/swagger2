@@ -36,7 +36,11 @@ describe('swagger2', () => {
 
   describe('petstore', () => {
     const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore.yaml');
-    const document: swagger.Document = swagger.validateDocument(raw);
+    const document: swagger.Document | undefined = swagger.validateDocument(raw);
+
+    if (document === undefined) {
+      throw Error();
+    }
 
     // construct a validation object, pre-compiling all schema and regex required
     let compiled = swagger.compileDocument(document);
@@ -48,8 +52,11 @@ describe('swagger2', () => {
 
     it('compiles valid paths', () => {
       let compiledPath = compiled('/v1/pets');
+      if (compiledPath === undefined) {
+        throw Error();
+      }
       assert.equal(compiledPath.name, '/pets');
-      assert.equal(compiledPath.path.get.summary, 'List all pets');
+      assert.equal((compiledPath.path.get || {summary: undefined}).summary, 'List all pets');
     });
 
     describe('/v1/pets', () => {
@@ -230,7 +237,7 @@ describe('swagger2', () => {
 
     describe('/v1/pets/{petId}', () => {
 
-      it('do not allow POSTs, PUTs or DELETEs', () => {
+      it('do not allow POSTs, PUTs or DELETE', () => {
         let compiledPath = compiled('/v1/pets/3');
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', {}, {}), undefined);
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {}, {}), undefined);

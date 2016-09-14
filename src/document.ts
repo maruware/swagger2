@@ -40,10 +40,11 @@ const schemaValidator = jsonValidator(JSON.parse(fs.readFileSync(__dirname + '/s
 /*
  * Validate a swagger document against the 2.0 schema, returning a typed Document object.
  */
-export function validateDocument(document: any): Document {
-  if (schemaValidator(document)) {
-    return document;
+export function validateDocument(document: any): Document | undefined {
+  if (!schemaValidator(document)) {
+    return;
   }
+  return document;
 }
 
 /*

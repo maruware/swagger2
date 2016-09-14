@@ -614,7 +614,7 @@ function load(name: string) {
   return document.loadDocumentSync(TEST_YAML_DIR + name);
 }
 
-function validate(raw: any): schema.Document {
+function validate(raw: any): schema.Document | undefined {
   return document.validateDocument(raw);
 }
 
