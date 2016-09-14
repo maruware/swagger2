@@ -5,33 +5,37 @@ function isEmpty(value) {
 }
 function validate(value, schema) {
     var valid = schema.validator(value);
-    if (!valid) {
-        var error = {
-            actual: value,
-            expected: {
-                schema: schema.schema,
-                type: schema.type,
-                format: schema.format
-            }
-        };
-        if (error.expected.schema === undefined) {
-            delete error.expected.schema;
-        }
-        if (error.expected.type === undefined) {
-            delete error.expected.type;
-        }
-        if (error.expected.format === undefined) {
-            delete error.expected.format;
-        }
-        return error;
+    if (valid) {
+        return;
     }
+    var error = {
+        actual: value,
+        expected: {
+            schema: schema.schema,
+            type: schema.type,
+            format: schema.format
+        }
+    };
+    if (error.expected.schema === undefined) {
+        delete error.expected.schema;
+    }
+    if (error.expected.type === undefined) {
+        delete error.expected.type;
+    }
+    if (error.expected.format === undefined) {
+        delete error.expected.format;
+    }
+    return error;
 }
 function request(compiledPath, method, query, body) {
+    if (compiledPath === undefined) {
+        return;
+    }
     // get operation object for path and method
     var operation = compiledPath.path[method.toLowerCase()];
     if (operation === undefined) {
         // operation not defined, return 405 (method not allowed)
-        return undefined;
+        return;
     }
     var parameters = operation.parameters;
     var validationErrors = [], bodyDefined = false;
@@ -63,7 +67,7 @@ function request(compiledPath, method, query, body) {
             case 'path':
                 var actual = compiledPath.name.match(/[^\/]+/g);
                 var valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
-                value = actual[valueIndex];
+                value = actual ? actual[valueIndex] : undefined;
                 break;
             case 'body':
                 value = body;
@@ -89,6 +93,12 @@ function request(compiledPath, method, query, body) {
 }
 exports.request = request;
 function response(compiledPath, method, status, body) {
+    if (compiledPath === undefined) {
+        return {
+            actual: 'UNDEFINED_PATH',
+            expected: 'PATH'
+        };
+    }
     var operation = compiledPath.path[method.toLowerCase()];
     // check the response matches the swagger schema
     var response = operation.responses[status];

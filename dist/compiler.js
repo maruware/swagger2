@@ -94,15 +94,16 @@ function compile(document) {
             name: name,
             path: swagger.paths[name],
             regex: new RegExp(swagger.basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
-            expected: name.match(/[^\/]+/g)
+            expected: (name.match(/[^\/]+/g) || []).map(function (s) { return s.toString(); })
         };
     });
     return function (path) {
         // get a list of matching paths, there should be only one
         var matches = matcher.filter(function (match) { return !!path.match(match.regex); });
-        if (matches.length === 1) {
-            return matches[0];
+        if (matches.length !== 1) {
+            return;
         }
+        return matches[0];
     };
 }
 exports.compile = compile;
