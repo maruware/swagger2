@@ -60,8 +60,10 @@ export interface CompiledPath {
 function queryValidator(schema: any) {
   let validator = jsonValidator(schema);
   return (value: any) => {
-    if (value === undefined) {
-      return validator();
+
+    // if an optional field is not provided, we're all good
+    if (value === undefined && schema.required === false) {
+      return true;
     }
 
     switch (schema.type) {
