@@ -84,7 +84,8 @@ function compile(document) {
                 }
                 else {
                     // no schema, so ensure there is no response
-                    response.validator = function (body) { return body === undefined; };
+                    // tslint:disable-next-line:no-null-keyword
+                    response.validator = function (body) { return body === undefined || body === null || body === ''; };
                 }
             });
         });
