@@ -35,8 +35,9 @@ var deref = require('json-schema-deref-sync');
 function queryValidator(schema) {
     var validator = jsonValidator(schema);
     return function (value) {
-        if (value === undefined) {
-            return validator();
+        // if an optional field is not provided, we're all good
+        if (value === undefined && schema.required === false) {
+            return true;
         }
         switch (schema.type) {
             case 'number':

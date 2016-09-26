@@ -1,6 +1,6 @@
 {
   "name": "swagger2",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Typescript-based tools for working with Swagger v2.0 documents",
   "main": "index.js",
   "repository": {
