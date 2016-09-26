@@ -114,7 +114,8 @@ export function compile(document: Document): Compiled {
           response.validator = jsonValidator(response.schema);
         } else {
           // no schema, so ensure there is no response
-          response.validator = (body: any) => body === undefined;
+          // tslint:disable-next-line:no-null-keyword
+          response.validator = (body: any) => body === undefined || body === null || body === '';
         }
       });
     });

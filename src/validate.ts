@@ -64,6 +64,10 @@ function validate(value: any, schema: CompiledDefinition): ValidationError | und
   if (error.expected.format === undefined) {
     delete error.expected.format;
   }
+  if (Object.keys(error.expected).length === 0) {
+    // nothing is expected, so set to undefined
+    error.expected = undefined;
+  }
   return error;
 }
 

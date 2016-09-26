@@ -88,7 +88,7 @@ describe('swagger2', () => {
         it('body must be empty', () => {
           assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', undefined, {x: 'hello'}), [{
             actual: {x: 'hello'},
-            expected: {},
+            expected: undefined,
             where: 'body'
           }]);
         });
@@ -106,8 +106,18 @@ describe('swagger2', () => {
           assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post'), []);
         });
 
+        it('fail if response invalid', () => {
+          assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'post', 201, {}), {
+            actual: {},
+            expected: undefined
+          });
+        });
+
         it('succeed if response valid', () => {
-          assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'post', 201), undefined);
+          assert.equal(swagger.validateResponse(compiledPath, 'post', 201), undefined);
+          // tslint:disable-next-line:no-null-keyword
+          assert.equal(swagger.validateResponse(compiledPath, 'post', 201, null), undefined);
+          assert.equal(swagger.validateResponse(compiledPath, 'post', 201, ''), undefined);
         });
       });
 
@@ -161,7 +171,7 @@ describe('swagger2', () => {
         it('body must be empty', () => {
           assert.deepStrictEqual([{
             actual: {x: 'hello'},
-            expected: {},
+            expected: undefined,
             where: 'body'
           }], swagger.validateRequest(compiledPath, 'get', undefined, {x: 'hello'}));
         });
