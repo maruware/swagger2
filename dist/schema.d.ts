@@ -1,4 +1,4 @@
-export declare type ParameterType = 'query' | 'path' | 'body';
+export declare type ParameterType = 'query' | 'path' | 'body' | 'header';
 export declare type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
 export declare type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
 export declare type Schemes = 'http' | 'https' | 'ws' | 'wss';

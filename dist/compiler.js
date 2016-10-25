@@ -32,7 +32,7 @@ var deref = require('json-schema-deref-sync');
  * We need special handling for query validation, since they're all strings.
  * e.g. we must treat "5" as a valid number
  */
-function queryValidator(schema) {
+function stringValidator(schema) {
     var validator = jsonValidator(schema);
     return function (value) {
         // if an optional field is not provided, we're all good
@@ -70,8 +70,8 @@ function compile(document) {
             var operation = path[operationName];
             (operation.parameters || []).forEach(function (parameter) {
                 var schema = parameter.schema || parameter;
-                if (parameter.in === 'query') {
-                    parameter.validator = queryValidator(schema);
+                if (parameter.in === 'query' || parameter.in === 'header') {
+                    parameter.validator = stringValidator(schema);
                 }
                 else {
                     parameter.validator = jsonValidator(schema);
