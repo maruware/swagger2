@@ -82,6 +82,8 @@ paths:
       tags:
         - pets
       parameters:
+        - $ref: "#/parameters/ifMatch"
+        - $ref: "#/parameters/ifNoneMatch"
         - name: petId
           in: path
           required: true
@@ -123,3 +125,19 @@ definitions:
         format: int32
       message:
         type: string
+
+parameters:
+
+  ifNoneMatch:
+    name: If-None-Match
+    in: header
+    description: If-None-Match header
+    required: false
+    type: number
+
+  ifMatch:
+    name: If-Match
+    in: header
+    description: If-Match header
+    required: true
+    type: string

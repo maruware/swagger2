@@ -266,9 +266,28 @@ describe('swagger2', () => {
       });
 
       describe('get', () => {
+        it('petId must return 400 if optional header has wrong format', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', undefined, undefined, {'If-Match': 'XYZ', 'If-None-Match': 'NOT NUMBER'}),
+            [{
+              actual: 'NOT NUMBER',
+              expected: {type: 'number'},
+              where: 'header'
+            }]);
+        });
+        it('petId must return 400 if required header missing', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), [{
+            actual: undefined,
+            expected: {type: 'string'},
+            where: 'header'
+          }]);
+        });
         it('petId must return an array of pet objects', () => {
           let compiledPath = compiled('/v1/pets/abc');
-          assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get'));
+          assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
+            'get', undefined, undefined, {'If-Match': 'XYZ'}));
           assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
             id: 3, name: 'hello'
           }]), undefined);

@@ -71,7 +71,11 @@ function validate(value: any, schema: CompiledDefinition): ValidationError | und
   return error;
 }
 
-export function request(compiledPath: CompiledPath | undefined, method: string, query?: any, body?: any): ValidationError[] | undefined {
+export function request(compiledPath: CompiledPath | undefined,
+                        method: string,
+                        query?: any,
+                        body?: any,
+                        headers?: any): ValidationError[] | undefined {
 
   if (compiledPath === undefined) {
     return;
@@ -127,6 +131,9 @@ export function request(compiledPath: CompiledPath | undefined, method: string, 
         value = body;
         bodyDefined = true;
         break;
+      case 'header':
+        value = (headers || {})[parameter.name];
+        break;
       default:
       // do nothing
     }
@@ -151,7 +158,10 @@ export function request(compiledPath: CompiledPath | undefined, method: string, 
 }
 
 
-export function response(compiledPath: CompiledPath | undefined, method: string, status: number, body?: any): ValidationError | undefined {
+export function response(compiledPath: CompiledPath | undefined,
+                         method: string,
+                         status: number,
+                         body?: any): ValidationError | undefined {
 
   if (compiledPath === undefined) {
     return {

@@ -40,7 +40,7 @@
  THE SOFTWARE.
  */
 
-export type ParameterType = 'query' | 'path' | 'body';
+export type ParameterType = 'query' | 'path' | 'body' | 'header';
 export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
 export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
 export type Schemes = 'http' | 'https' | 'ws' | 'wss';

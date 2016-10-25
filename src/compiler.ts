@@ -57,7 +57,7 @@ export interface CompiledPath {
  * We need special handling for query validation, since they're all strings.
  * e.g. we must treat "5" as a valid number
  */
-function queryValidator(schema: any) {
+function stringValidator(schema: any) {
   let validator = jsonValidator(schema);
   return (value: any) => {
 
@@ -102,8 +102,8 @@ export function compile(document: Document): Compiled {
       let operation = path[operationName];
       (operation.parameters || []).forEach((parameter: CompiledParameter) => {
         let schema = parameter.schema || parameter;
-        if (parameter.in === 'query') {
-          parameter.validator = queryValidator(schema);
+        if (parameter.in === 'query' || parameter.in === 'header') {
+          parameter.validator = stringValidator(schema);
         } else {
           parameter.validator = jsonValidator(schema);
         }

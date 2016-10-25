@@ -108,6 +108,10 @@ const PETSTORE_DOCUMENT: schema.Document = {
         'operationId': 'showPetById',
         'tags': ['pets'],
         'parameters': [{
+          '$ref': '#/parameters/ifMatch',
+        }, {
+          '$ref': '#/parameters/ifNoneMatch'
+        }, {
           'name': 'petId',
           'in': 'path',
           'required': true,
@@ -136,6 +140,22 @@ const PETSTORE_DOCUMENT: schema.Document = {
     'Error': {
       'required': ['code', 'message'],
       'properties': {'code': {'type': 'integer', 'format': 'int32'}, 'message': {'type': 'string'}}
+    }
+  },
+  parameters: {
+    'ifNoneMatch': {
+      'name': 'If-None-Match',
+      'in': 'header',
+      'description': 'If-None-Match header',
+      'required': false,
+      'type': 'number'
+    },
+    'ifMatch': {
+      'name': 'If-Match',
+      'in': 'header',
+      'description': 'If-Match header',
+      'required': true,
+      'type': 'string'
     }
   }
 };
