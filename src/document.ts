@@ -28,9 +28,9 @@
  THE SOFTWARE.
  */
 
-import * as YAML from 'yamljs';
-import * as jsonValidator from 'is-my-json-valid';
 import * as fs from 'fs';
+import * as jsonValidator from 'is-my-json-valid';
+import * as YAML from 'yamljs';
 
 import {Document} from './schema';
 

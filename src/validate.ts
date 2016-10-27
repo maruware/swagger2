@@ -28,7 +28,7 @@
  THE SOFTWARE.
  */
 
-import {CompiledPath, CompiledDefinition} from './compiler';
+import {CompiledDefinition, CompiledPath} from './compiler';
 
 export interface ValidationError {
   where?: string;
@@ -82,7 +82,7 @@ export function request(compiledPath: CompiledPath | undefined,
   }
 
   // get operation object for path and method
-  let operation = (<any>compiledPath.path)[method.toLowerCase()];
+  let operation = (<any> compiledPath.path)[method.toLowerCase()];
 
   if (operation === undefined) {
     // operation not defined, return 405 (method not allowed)
@@ -90,7 +90,8 @@ export function request(compiledPath: CompiledPath | undefined,
   }
 
   let parameters = operation.parameters;
-  let validationErrors: ValidationError[] = [], bodyDefined = false;
+  let validationErrors: ValidationError[] = [];
+  let bodyDefined = false;
 
   // check all the parameters match swagger schema
   if (parameters === undefined) {
@@ -170,7 +171,7 @@ export function response(compiledPath: CompiledPath | undefined,
     };
   }
 
-  let operation = (<any>compiledPath.path)[method.toLowerCase()];
+  let operation = (<any> compiledPath.path)[method.toLowerCase()];
 
   // check the response matches the swagger schema
   let response = operation.responses[status];

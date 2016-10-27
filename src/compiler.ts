@@ -31,7 +31,7 @@
 import * as jsonValidator from 'is-my-json-valid';
 import * as deref from 'json-schema-deref-sync';
 
-import {PathItem, Document, Definition, Parameter} from './schema';
+import {Definition, Document, Parameter, PathItem} from './schema';
 
 export interface Compiled {
   (path: string): CompiledPath | undefined;

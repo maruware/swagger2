@@ -25,6 +25,7 @@
  */
 
 import * as assert from 'assert';
+
 import * as swagger from './swagger';
 import {Compiled} from './swagger';
 
@@ -177,66 +178,69 @@ describe('swagger2', () => {
         });
 
         it('ok with no limit', () => assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get')));
-        it('ok with valid limit', () => assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get', {limit: 50})));
+        it('ok with valid limit', () => assert.deepStrictEqual([], swagger.validateRequest(compiledPath, 'get',
+          {limit: 50})));
         it('invalid method response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 201,
           {code: 'hello'}), {
-          'actual': {'code': 'hello'},
-          'expected': {
-            'schema': {
-              'required': ['code', 'message'],
-              'properties': {'code': {'type': 'integer', 'format': 'int32'}, 'message': {'type': 'string'}}
+          actual: {code: 'hello'},
+          expected: {
+            schema: {
+              required: ['code', 'message'],
+              properties: {code: {type: 'integer', format: 'int32'}, message: {type: 'string'}}
             }
           }
         }));
 
-        it('invalid object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, {bad: 'object'}), {
-          'actual': {'bad': 'object'},
-          'expected': {
-            'schema': {
-              'type': 'array',
-              'items': {
-                'required': ['id', 'name'],
-                'properties': {
-                  'id': {'type': 'integer', 'format': 'int64'},
-                  'name': {'type': 'string'},
-                  'tag': {'type': 'string'}
+        it('invalid object response',
+          () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, {bad: 'object'}), {
+            actual: {bad: 'object'},
+            expected: {
+              schema: {
+                type: 'array',
+                items: {
+                  required: ['id', 'name'],
+                  properties: {
+                    id: {type: 'integer', format: 'int64'},
+                    name: {type: 'string'},
+                    tag: {type: 'string'}
+                  }
                 }
               }
             }
-          }
-        }));
+          }));
 
         it('invalid array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200,
           [{bad: 'value'}]), {
-          'actual': [{'bad': 'value'}],
-          'expected': {
-            'schema': {
-              'type': 'array',
-              'items': {
-                'required': ['id', 'name'],
-                'properties': {
-                  'id': {'type': 'integer', 'format': 'int64'},
-                  'name': {'type': 'string'},
-                  'tag': {'type': 'string'}
+          actual: [{bad: 'value'}],
+          expected: {
+            schema: {
+              type: 'array',
+              items: {
+                required: ['id', 'name'],
+                properties: {
+                  id: {type: 'integer', format: 'int64'},
+                  name: {type: 'string'},
+                  tag: {type: 'string'}
                 }
               }
             }
           }
         }));
 
-        it('invalid pet object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
-          id: 'abc', name: 'hello'
-        }]), {
-          'actual': [{'id': 'abc', 'name': 'hello'}],
-          'expected': {
-            'schema': {
-              'type': 'array',
-              'items': {
-                'required': ['id', 'name'],
-                'properties': {
-                  'id': {'type': 'integer', 'format': 'int64'},
-                  'name': {'type': 'string'},
-                  'tag': {'type': 'string'}
+        it('invalid pet object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get',
+          200, [{
+            id: 'abc', name: 'hello'
+          }]), {
+          actual: [{id: 'abc', name: 'hello'}],
+          expected: {
+            schema: {
+              type: 'array',
+              items: {
+                required: ['id', 'name'],
+                properties: {
+                  id: {type: 'integer', format: 'int64'},
+                  name: {type: 'string'},
+                  tag: {type: 'string'}
                 }
               }
             }
@@ -248,7 +252,8 @@ describe('swagger2', () => {
           message: 'message'
         }), undefined));
 
-        it('valid empty array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, []), undefined));
+        it('valid empty array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get',
+          200, []), undefined));
         it('valid array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
           id: 3, name: 'hello'
         }]), undefined));
@@ -297,7 +302,7 @@ describe('swagger2', () => {
   });
 
 
-  //TODO: load relative references so we can validate petstore-separate
+  // TODO: load relative references so we can validate petstore-separate
   // describe('petstore-separate', () => {
   //   const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore-separate/spec/swagger.yaml');
   //   const document: swagger.Document = swagger.validateDocument(raw);

@@ -31,14 +31,10 @@
  THE SOFTWARE.
  */
 
-import * as validate from './validate';
-import * as document from './document';
 import * as compiler from './compiler';
-
-/* tslint:disable:no-unused-variable */
-//noinspection ES6UnusedImports
+import * as document from './document';
 import * as schema from './schema';
-/* tslint:enable:no-unused-variable */
+import * as validate from './validate';
 
 export const loadDocumentSync = document.loadDocumentSync;
 export const validateDocument = document.validateDocument;

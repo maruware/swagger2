@@ -30,7 +30,6 @@
     "@types/mocha": "^2.2.32",
     "@types/nock": "^8.0.33",
     "@types/node": "^6.0.45",
-    "@types/winston": "0.0.28",
     "@types/yamljs": "^0.2.30",
     "coveralls": "^2.11.14",
     "expectations": "^0.6.0",

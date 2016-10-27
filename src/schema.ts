@@ -41,8 +41,12 @@
  */
 
 export type ParameterType = 'query' | 'path' | 'body' | 'header';
+
 export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
-export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
+
+export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' |
+  'byte' | 'binary' | 'date' | 'date-time' | 'password';
+
 export type Schemes = 'http' | 'https' | 'ws' | 'wss';
 
 /*
@@ -147,11 +151,11 @@ export interface Document {
  */
 export interface Info {
   title: string;           // The title of the application.
-  description?: string;    // A short description of the application. GFM syntax can be used for rich text representation.
+  description?: string;    // A short description of the application.
   termsOfService?: string; // The Terms of Service for the API.
   contact?: Contact;       // The contact information for the exposed API.
   license?: License;       // The license information for the exposed API.
-  version: string;         // Provides the version of the application API (not to be confused with the specification version).
+  version: string;         // Provides the version of the application API.
 }
 
 // Contact information for the exposed API.
@@ -188,7 +192,7 @@ export interface PathItem {
   get?: Operation;
   put?: Operation;
   post?: Operation;
-  //noinspection ReservedWordAsName
+  // noinspection ReservedWordAsName
   delete?: Operation;
   options?: Operation;
   head?: Operation;
@@ -236,7 +240,7 @@ export interface Definition {
 
 export interface Parameter extends Definition {
   name?: string;
-  //noinspection ReservedWordAsName
+  // noinspection ReservedWordAsName
   in?: ParameterType;
   description?: string;
 }
