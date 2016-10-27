@@ -143,6 +143,12 @@ export interface Document {
    Additional external documentation.
    */
   externalDocs?: ExternalDocumentation;
+
+  /*
+   Allows extensions to the Swagger Schema. The field name MUST begin with x-, for example, x-internal-id.
+   The value can be null, a primitive, an array or an object.
+   */
+  [extension: string]: any;
 }
 
 /*
@@ -150,12 +156,13 @@ export interface Document {
  the Swagger-UI for convenience.
  */
 export interface Info {
-  title: string;           // The title of the application.
-  description?: string;    // A short description of the application.
-  termsOfService?: string; // The Terms of Service for the API.
-  contact?: Contact;       // The contact information for the exposed API.
-  license?: License;       // The license information for the exposed API.
-  version: string;         // Provides the version of the application API.
+  title: string;            // The title of the application.
+  description?: string;     // A short description of the application.
+  termsOfService?: string;  // The Terms of Service for the API.
+  contact?: Contact;        // The contact information for the exposed API.
+  license?: License;        // The license information for the exposed API.
+  version: string;          // Provides the version of the application API.
+  [extension: string]: any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
 // Contact information for the exposed API.
@@ -163,12 +170,14 @@ export interface Contact {
   name?: string;  // The identifying name of the contact person/organization.
   url?: string;   // The URL pointing to the contact information. MUST be in the format of a URL.
   email?: string; // The email address of the contact person/organization. MUST be in the format of an email address.
+  [extension: string]: any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
 // License information for the exposed API.
 export interface License {
-  name: string; // The license name used for the API.
-  url?: string; // A URL to the license used for the API. MUST be in the format of a URL.
+  name: string;             // The license name used for the API.
+  url?: string;             // A URL to the license used for the API. MUST be in the format of a URL.
+  [extension: string]: any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
 /*
@@ -180,7 +189,7 @@ export interface Paths {
    A relative path to an individual endpoint. The field name MUST begin with a slash. The path is appended to the
    basePath in order to construct the full URL. PathItem templating is allowed.
    */
-  [ path: string ]: PathItem;
+  [ path: string ]: PathItem | any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
 /*
@@ -188,7 +197,7 @@ export interface Paths {
  is still exposed to the documentation viewer but they will not know which operations and parameters are available.
  */
 export interface PathItem {
-  '$ref'?: Operation;
+  $ref?: Operation;
   get?: Operation;
   put?: Operation;
   post?: Operation;
@@ -198,38 +207,77 @@ export interface PathItem {
   head?: Operation;
   patch?: Operation;
   parameters?: Operation;
+  [extension: string]: any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
+/*
+ An object to hold data types that can be consumed and produced by operations.
+ These data types can be primitives, arrays or models.
+ */
 export interface Definitions {
-
+  [name: string]: any; // A single definition, mapping a "name" to the schema it defines.
 }
 
+/*
+ An object to hold parameters to be reused across operations.
+ Parameter definitions can be referenced to the ones defined here.
+ This does not define global operation parameters.
+ */
 export interface ParametersDefinitions {
-
+  [name: string]: any; // A single parameter definition, mapping a "name" to the parameter it defines.
 }
 
+/*
+ An object to hold responses to be reused across operations.
+ Response definitions can be referenced to the ones defined here.
+ This does not define global operation responses.
+ */
 export interface ResponsesDefinitions {
-
+  [name: string]: any; // A single response definition, mapping a "name" to the response it defines.
 }
 
+/*
+ A declaration of the security schemes available to be used in the specification.
+ This does not enforce the security schemes on the operations and only serves to provide
+ the relevant details for each scheme.
+ */
 export interface SecurityDefinitions {
-
+  [name: string]: any; // A single security scheme definition, mapping a "name" to the scheme it defines.
 }
 
+/*
+ Lists the required security schemes to execute this operation.
+ The object can have multiple security schemes declared in it which are all required (that is, there is a logical
+ AND between the schemes).
+
+ The name used for each property MUST correspond to a security scheme declared in the Security Definitions.
+ */
 export interface SecurityRequirement {
-
+  [name: string]: any; // Each name must correspond to a security scheme which is declared in the Security Definitions.
 }
 
+/*
+ Allows adding meta data to a single tag that is used by the Operation Object. It is not mandatory to have a
+ Tag Object per tag used there.
+ */
 export interface Tag {
-
+  name: string;                         // The name of the tag.
+  description?: string;                 // A short description for the tag.
+  externalDocs?: ExternalDocumentation; // Additional external documentation for this tag.
+  [extension: string]: any;             // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
+/*
+ Allows referencing an external resource for extended documentation.
+ */
 export interface ExternalDocumentation {
-
+  description?: string;     // A short description of the target documentation.
+  url: string;              // The URL for the target documentation. Value MUST be in the format of a URL.
+  [extension: string]: any; // Allows extensions to the Swagger Schema. The field name MUST begin with x-.
 }
 
 export interface Definition {
-  '$ref'?: string;
+  $ref?: string;
   type?: DataType;
   format?: DataFormat;
   schema?: any;
