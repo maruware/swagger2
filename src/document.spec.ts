@@ -114,6 +114,16 @@ const PETSTORE_DOCUMENT: schema.Document = {
         }, {
           $ref: '#/parameters/ifNoneMatch'
         }, {
+          $ref: '#/parameters/stringArray'
+        }, {
+          $ref: '#/parameters/optionalNumberArray'
+        }, {
+          $ref: '#/parameters/optionalBooleanArray'
+        }, {
+          $ref: '#/parameters/optionalSpacedBooleanArray'
+        }, {
+          $ref: '#/parameters/optionalTabbedBooleanArray'
+        }, {
           name: 'petId',
           in: 'path',
           required: true,
@@ -158,6 +168,60 @@ const PETSTORE_DOCUMENT: schema.Document = {
       description: 'If-Match header',
       required: true,
       type: 'string'
+    },
+    stringArray: {
+      name: 'String',
+      in: 'query',
+      description: 'an array of strings',
+      required: true,
+      type: 'array',
+      items: {
+        type: 'string'
+      },
+      collectionFormat: 'multi'
+    },
+    optionalNumberArray: {
+      name: 'Number',
+      in: 'query',
+      description: 'an array of numbers',
+      required: false,
+      type: 'array',
+      items: {
+        type: 'number'
+      }
+    },
+    optionalBooleanArray: {
+      name: 'Boolean',
+      in: 'query',
+      description: 'an array of booleans',
+      required: false,
+      type: 'array',
+      items: {
+        type: 'boolean'
+      },
+      collectionFormat: 'pipes'
+    },
+    optionalSpacedBooleanArray: {
+      name: 'SpacedBoolean',
+      in: 'query',
+      description: 'a spaced array of booleans',
+      required: false,
+      type: 'array',
+      items: {
+        type: 'boolean'
+      },
+      collectionFormat: 'ssv'
+    },
+    optionalTabbedBooleanArray: {
+      name: 'TabbedBoolean',
+      in: 'query',
+      description: 'a tabbed array of booleans',
+      required: false,
+      type: 'array',
+      items: {
+        type: 'boolean'
+      },
+      collectionFormat: 'tsv'
     }
   }
 };

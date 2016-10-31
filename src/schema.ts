@@ -40,7 +40,7 @@
  THE SOFTWARE.
  */
 
-export type ParameterType = 'query' | 'path' | 'body' | 'header';
+export type ParameterType = 'query' | 'path' | 'body' | 'header' | 'formData';
 
 export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
 
@@ -48,6 +48,18 @@ export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' |
   'byte' | 'binary' | 'date' | 'date-time' | 'password';
 
 export type Schemes = 'http' | 'https' | 'ws' | 'wss';
+
+/*
+ Determines the format of the array if type array is used. Possible values are:
+ csv - comma separated values foo,bar.
+ ssv - space separated values foo bar.
+ tsv - tab separated values foo\tbar.
+ pipes - pipe separated values foo|bar.
+ multi - corresponds to multiple parameter instances instead of multiple values for a single instance
+         foo=bar&foo=baz.   This is valid only for parameters in "query" or "formData".
+ Default value is csv.
+ */
+export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
 
 /*
  This is the root document object for the API specification. It combines what previously was the Resource Listing

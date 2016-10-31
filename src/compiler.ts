@@ -31,7 +31,7 @@
 import * as jsonValidator from 'is-my-json-valid';
 import * as deref from 'json-schema-deref-sync';
 
-import {Definition, Document, Parameter, PathItem} from './schema';
+import {CollectionFormat, Definition, Document, Parameter, PathItem} from './schema';
 
 export interface Compiled {
   (path: string): CompiledPath | undefined;
@@ -61,9 +61,9 @@ function stringValidator(schema: any) {
   let validator = jsonValidator(schema);
   return (value: any) => {
 
-    // if an optional field is not provided, we're all good
-    if (value === undefined && schema.required === false) {
-      return true;
+    // if an optional field is not provided, we're all good other not so much
+    if (value === undefined) {
+      return !schema.required;
     }
 
     switch (schema.type) {
@@ -80,6 +80,56 @@ function stringValidator(schema: any) {
           value = true;
         } else if (value === 'false') {
           value = false;
+        }
+        break;
+
+      case 'array':
+        if (!Array.isArray(value)) {
+          const format: CollectionFormat = schema.collectionFormat || 'csv';
+          switch (format) {
+            case 'csv':
+              value = String(value).split(',');
+              break;
+            case 'ssv':
+              value = String(value).split(' ');
+              break;
+            case 'tsv':
+              value = String(value).split('\t');
+              break;
+            case 'pipes':
+              value = String(value).split('|');
+              break;
+            case 'multi':
+            default:
+              value = [value];
+              break;
+          }
+        }
+        switch (schema.items.type) {
+          case 'number':
+          case 'integer':
+            value = value.map((num: any) => {
+              if (!isNaN(num)) {
+                // if the value is a number, make sure it's a number
+                return +num;
+              } else {
+                return num;
+              }
+            });
+            break;
+          case 'boolean':
+            value = value.map((bool: any) => {
+              if (bool === 'true') {
+                return true;
+              } else if (bool === 'false') {
+                return false;
+              } else {
+                return bool;
+              }
+            });
+            break;
+          default:
+          // leave as-is
         }
         break;
 

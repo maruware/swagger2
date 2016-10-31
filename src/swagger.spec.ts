@@ -274,7 +274,7 @@ describe('swagger2', () => {
         it('petId must return 400 if optional header has wrong format', () => {
           let compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
-            'get', undefined, undefined, {'If-Match': 'XYZ', 'If-None-Match': 'NOT NUMBER'}),
+            'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ', 'If-None-Match': 'NOT NUMBER'}),
             [{
               actual: 'NOT NUMBER',
               expected: {type: 'number'},
@@ -283,7 +283,7 @@ describe('swagger2', () => {
         });
         it('petId must return 400 if required header missing', () => {
           let compiledPath = compiled('/v1/pets/abc');
-          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), [{
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {String: 'hello'}), [{
             actual: undefined,
             expected: {type: 'string'},
             where: 'header'
@@ -292,11 +292,127 @@ describe('swagger2', () => {
         it('petId must return an array of pet objects', () => {
           let compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
-            'get', undefined, undefined, {'If-Match': 'XYZ'}));
+            'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ'}));
           assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
             id: 3, name: 'hello'
           }]), undefined);
         });
+        it('petId must accept a required array of strings in query', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
+            'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ'}));
+          assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
+            'get', {String: ['hello']}, undefined, {'If-Match': 'XYZ'}));
+          assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
+            'get', {String: ['hello', 'hello2']}, undefined, {'If-Match': 'XYZ'}));
+          assert.deepStrictEqual([{
+            actual: undefined,
+            expected: {type: 'array'},
+            where: 'query'
+          }], swagger.validateRequest(compiledPath,
+            'get', undefined, undefined, {'If-Match': 'XYZ'}));
+        });
+
+        it('petId must accept an optional array of numbers in query', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Number: 213}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Number: '213'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Number: '213,456'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Number: 'hello'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'hello',
+            expected: {type: 'array'},
+            where: 'query'
+          }]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Number: '123,hello'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: '123,hello',
+            expected: {type: 'array'},
+            where: 'query'
+          }]);
+        });
+
+        it('petId must accept an optional array of booleans in query', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Boolean: true}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Boolean: 'true'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Boolean: 'false|true'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Boolean: 'hello'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'hello',
+            expected: {type: 'array'},
+            where: 'query'
+          }]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', Boolean: 'true|hello'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'true|hello',
+            expected: {type: 'array'},
+            where: 'query'
+          }]);
+        });
+
+        it('petId must accept an optional spaced array of booleans in query', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'true'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'false true'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'false abc'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false abc',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'false,true'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false,true',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'false\ttrue'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false\ttrue',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', SpacedBoolean: 'false|true'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false|true',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+        });
+
+        it('petId must accept an optional tabbed array of booleans in query', () => {
+          let compiledPath = compiled('/v1/pets/abc');
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'true'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'false\ttrue'}, undefined, {'If-Match': 'XYZ'}), []);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'false\tabc'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false\tabc',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'false,true'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false,true',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'false true'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false true',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+          assert.deepStrictEqual(swagger.validateRequest(compiledPath,
+            'get', {String: 'hello', TabbedBoolean: 'false|true'}, undefined, {'If-Match': 'XYZ'}), [{
+            actual: 'false|true',
+            expected: { type: 'array' },
+            where: 'query' } ]);
+        });
+
       });
     });
   });
