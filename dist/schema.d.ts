@@ -1,7 +1,8 @@
-export declare type ParameterType = 'query' | 'path' | 'body' | 'header';
+export declare type ParameterType = 'query' | 'path' | 'body' | 'header' | 'formData';
 export declare type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
 export declare type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
 export declare type Schemes = 'http' | 'https' | 'ws' | 'wss';
+export declare type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
 export interface Document {
     swagger: '2.0';
     info: Info;
@@ -18,6 +19,7 @@ export interface Document {
     security?: SecurityRequirement;
     tags?: Tag;
     externalDocs?: ExternalDocumentation;
+    [extension: string]: any;
 }
 export interface Info {
     title: string;
@@ -26,21 +28,24 @@ export interface Info {
     contact?: Contact;
     license?: License;
     version: string;
+    [extension: string]: any;
 }
 export interface Contact {
     name?: string;
     url?: string;
     email?: string;
+    [extension: string]: any;
 }
 export interface License {
     name: string;
     url?: string;
+    [extension: string]: any;
 }
 export interface Paths {
-    [path: string]: PathItem;
+    [path: string]: PathItem | any;
 }
 export interface PathItem {
-    '$ref'?: Operation;
+    $ref?: Operation;
     get?: Operation;
     put?: Operation;
     post?: Operation;
@@ -49,23 +54,36 @@ export interface PathItem {
     head?: Operation;
     patch?: Operation;
     parameters?: Operation;
+    [extension: string]: any;
 }
 export interface Definitions {
+    [name: string]: any;
 }
 export interface ParametersDefinitions {
+    [name: string]: any;
 }
 export interface ResponsesDefinitions {
+    [name: string]: any;
 }
 export interface SecurityDefinitions {
+    [name: string]: any;
 }
 export interface SecurityRequirement {
+    [name: string]: any;
 }
 export interface Tag {
+    name: string;
+    description?: string;
+    externalDocs?: ExternalDocumentation;
+    [extension: string]: any;
 }
 export interface ExternalDocumentation {
+    description?: string;
+    url: string;
+    [extension: string]: any;
 }
 export interface Definition {
-    '$ref'?: string;
+    $ref?: string;
     type?: DataType;
     format?: DataFormat;
     schema?: any;

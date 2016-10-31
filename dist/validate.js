@@ -42,7 +42,8 @@ function request(compiledPath, method, query, body, headers) {
         return;
     }
     var parameters = operation.parameters;
-    var validationErrors = [], bodyDefined = false;
+    var validationErrors = [];
+    var bodyDefined = false;
     // check all the parameters match swagger schema
     if (parameters === undefined) {
         var error = validate(body, { validator: isEmpty });
