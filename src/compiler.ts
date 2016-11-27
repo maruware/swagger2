@@ -150,7 +150,23 @@ export function compile(document: Document): Compiled {
     let path = swagger.paths[pathName];
     Object.keys(path).filter((name) => name !== 'parameters').forEach((operationName) => {
       let operation = path[operationName];
-      (operation.parameters || path.parameters || []).forEach((parameter: CompiledParameter) => {
+
+      let parameters: any = {};
+      const resolveParameter = (parameter: any) => {
+        parameters[`${parameter.name}:${parameter.location}`] = parameter;
+      };
+
+      // start with parameters at path level
+      (path.parameters || []).forEach(resolveParameter);
+
+      // merge in or replace parameters from operation level
+      (operation.parameters || []).forEach(resolveParameter);
+
+      // create array of fully resolved parameters for operation
+      operation.resolvedParameters = Object.keys(parameters).map((key) => parameters[key]);
+
+      // create parameter validators
+      operation.resolvedParameters.forEach((parameter: CompiledParameter) => {
         let schema = parameter.schema || parameter;
         if (parameter.in === 'query' || parameter.in === 'header') {
           parameter.validator = stringValidator(schema);
@@ -158,6 +174,7 @@ export function compile(document: Document): Compiled {
           parameter.validator = jsonValidator(schema);
         }
       });
+
       Object.keys(operation.responses).forEach((statusCode) => {
         let response = operation.responses[statusCode];
         if (response.schema) {

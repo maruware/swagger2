@@ -449,9 +449,32 @@ describe('swagger2', () => {
       compiled = swagger.compileDocument(document);
     }
 
-    it('GET /api/pets', () => {
+    it('/api/pets', () => {
       let compiledPath = compiled('/api/pets/abc');
-      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
+
+      // not ok
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {
+        Number: 1
+      }), [{
+        actual: undefined,
+        expected: {type: 'string'},
+        where: 'query'
+      }]);
+
+      // ok
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {
+        String: 'hello',
+        Number: 1
+      }), []);
+
+      // not ok
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {
+        String: 'abc'
+      }), [{actual: 'abc', expected: {type: 'number'}, where: 'query'}]);
+
+      // ok
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {String: 123}), []);
+
     });
   });
 

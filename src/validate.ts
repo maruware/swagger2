@@ -89,12 +89,12 @@ export function request(compiledPath: CompiledPath | undefined,
     return;
   }
 
-  let parameters = operation.parameters;
+  let parameters = operation.resolvedParameters;
   let validationErrors: ValidationError[] = [];
   let bodyDefined = false;
 
   // check all the parameters match swagger schema
-  if (parameters === undefined) {
+  if (parameters.length === 0) {
 
     let error = validate(body, {validator: isEmpty});
     if (error !== undefined) {

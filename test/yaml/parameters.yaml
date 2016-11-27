@@ -25,10 +25,21 @@
           required: true
           description: name of the pet to lookup
           type: string
+        - name: String
+          in: query
+          required: true
+          description: string query parameter
+          type: string
       get:
         description: "Returns a pet by name"
         produces:
           - "application/json"
+        parameters:
+          - name: Number
+            in: query
+            required: true
+            description: number query parameter
+            type: number
         responses:
           "200":
             description: "A pet"
@@ -38,6 +49,12 @@
         description: "Updates a pet by name"
         produces:
           - "application/json"
+        parameters:
+          - name: String
+            in: query
+            required: true
+            description: string overridden as number query parameter
+            type: number
         responses:
           "200":
             description: "A list of pets."
