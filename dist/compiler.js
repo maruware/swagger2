@@ -117,9 +117,9 @@ function compile(document) {
     // add a validator for every parameter in swagger document
     Object.keys(swagger.paths).forEach(function (pathName) {
         var path = swagger.paths[pathName];
-        Object.keys(path).forEach(function (operationName) {
+        Object.keys(path).filter(function (name) { return name !== 'parameters'; }).forEach(function (operationName) {
             var operation = path[operationName];
-            (operation.parameters || []).forEach(function (parameter) {
+            (operation.parameters || path.parameters || []).forEach(function (parameter) {
                 var schema = parameter.schema || parameter;
                 if (parameter.in === 'query' || parameter.in === 'header') {
                     parameter.validator = stringValidator(schema);
