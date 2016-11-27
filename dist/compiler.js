@@ -119,7 +119,18 @@ function compile(document) {
         var path = swagger.paths[pathName];
         Object.keys(path).filter(function (name) { return name !== 'parameters'; }).forEach(function (operationName) {
             var operation = path[operationName];
-            (operation.parameters || path.parameters || []).forEach(function (parameter) {
+            var parameters = {};
+            var resolveParameter = function (parameter) {
+                parameters[(parameter.name + ":" + parameter.location)] = parameter;
+            };
+            // start with parameters at path level
+            (path.parameters || []).forEach(resolveParameter);
+            // merge in or replace parameters from operation level
+            (operation.parameters || []).forEach(resolveParameter);
+            // create array of fully resolved parameters for operation
+            operation.resolvedParameters = Object.keys(parameters).map(function (key) { return parameters[key]; });
+            // create parameter validators
+            operation.resolvedParameters.forEach(function (parameter) {
                 var schema = parameter.schema || parameter;
                 if (parameter.in === 'query' || parameter.in === 'header') {
                     parameter.validator = stringValidator(schema);
