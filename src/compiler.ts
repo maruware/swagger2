@@ -148,9 +148,9 @@ export function compile(document: Document): Compiled {
   // add a validator for every parameter in swagger document
   Object.keys(swagger.paths).forEach((pathName) => {
     let path = swagger.paths[pathName];
-    Object.keys(path).forEach((operationName) => {
+    Object.keys(path).filter((name) => name !== 'parameters').forEach((operationName) => {
       let operation = path[operationName];
-      (operation.parameters || []).forEach((parameter: CompiledParameter) => {
+      (operation.parameters || path.parameters || []).forEach((parameter: CompiledParameter) => {
         let schema = parameter.schema || parameter;
         if (parameter.in === 'query' || parameter.in === 'header') {
           parameter.validator = stringValidator(schema);
