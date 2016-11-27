@@ -146,9 +146,9 @@ export function compile(document: Document): Compiled {
   let swagger = deref(document);
 
   // add a validator for every parameter in swagger document
-  Object.keys(swagger.paths).forEach(pathName => {
+  Object.keys(swagger.paths).forEach((pathName) => {
     let path = swagger.paths[pathName];
-    Object.keys(path).forEach(operationName => {
+    Object.keys(path).forEach((operationName) => {
       let operation = path[operationName];
       (operation.parameters || []).forEach((parameter: CompiledParameter) => {
         let schema = parameter.schema || parameter;
@@ -158,7 +158,7 @@ export function compile(document: Document): Compiled {
           parameter.validator = jsonValidator(schema);
         }
       });
-      Object.keys(operation.responses).forEach(statusCode => {
+      Object.keys(operation.responses).forEach((statusCode) => {
         let response = operation.responses[statusCode];
         if (response.schema) {
           response.validator = jsonValidator(response.schema);
@@ -172,18 +172,18 @@ export function compile(document: Document): Compiled {
   });
 
   let matcher: CompiledPath[] = Object.keys(swagger.paths)
-    .map(name => {
+    .map((name) => {
       return {
         name,
         path: swagger.paths[name],
         regex: new RegExp(swagger.basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
-        expected: (name.match(/[^\/]+/g) || []).map(s => s.toString())
+        expected: (name.match(/[^\/]+/g) || []).map((s) => s.toString())
       };
     });
 
   return (path: string) => {
     // get a list of matching paths, there should be only one
-    let matches = matcher.filter(match => !!path.match(match.regex));
+    let matches = matcher.filter((match) => !!path.match(match.regex));
     if (matches.length !== 1) {
       return;
     }

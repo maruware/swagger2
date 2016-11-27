@@ -23,22 +23,22 @@
   "dependencies": {
     "is-my-json-valid": "^2.15.0",
     "json-refs": "^2.1.6",
-    "json-schema-deref-sync": "^0.3.2",
+    "json-schema-deref-sync": "^0.3.3",
     "yamljs": "^0.2.8"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/nock": "^8.0.33",
-    "@types/node": "^6.0.46",
+    "@types/mocha": "^2.2.33",
+    "@types/nock": "^8.2.0",
+    "@types/node": "^6.0.51",
     "@types/yamljs": "^0.2.30",
-    "coveralls": "^2.11.14",
+    "coveralls": "^2.11.15",
     "expectations": "^0.6.0",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.1.2",
+    "mocha": "^3.2.0",
     "nock": "^9.0.2",
     "remap-istanbul": "^0.7.0",
-    "tslint": "^3.15.1",
-    "typescript": "^2.0.6"
+    "tslint": "^4.0.2",
+    "typescript": "^2.0.10"
   },
   "maintainers": [
     {
@@ -53,7 +53,7 @@
     "build": "rm -rf build && tsc && cp src/schema.json build",
     "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 -d --pretty --noImplicitAny && cp src/schema.json dist",
     "clean": "rm -rf build && rm -rf coverage && rm -rf node_modules",
-    "lint": "tslint -c ./tslint.json $(find src -name '*.ts')",
+    "lint": "tslint -c ./tslint.json --project ./tsconfig.json",
     "test": "npm run build && _mocha --require expectations $(find build -name '*.spec.js') && npm run lint",
     "cover": "npm run build && npm run cover:istanbul && npm run cover:remap",
     "cover:browser": "npm run cover && istanbul report html && open coverage/coverage-remapped/index.html",

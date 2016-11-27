@@ -103,7 +103,7 @@ export function request(compiledPath: CompiledPath | undefined,
     }
 
     if (query !== undefined && Object.keys(query).length > 0) {
-      Object.keys(query).forEach(key => {
+      Object.keys(query).forEach((key) => {
         validationErrors.push({
           where: 'query',
           name: key,
