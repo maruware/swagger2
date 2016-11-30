@@ -42,6 +42,17 @@ function isEmpty(value: any) {
 }
 
 function validate(value: any, schema: CompiledDefinition): ValidationError | undefined {
+
+  // if no schema, treat as an error
+  if (schema === undefined) {
+    return {
+      actual: value,
+      expected: {
+        schema: undefined
+      },
+    };
+  }
+
   let valid = schema.validator(value);
   if (valid) {
     return;
@@ -177,12 +188,6 @@ export function response(compiledPath: CompiledPath | undefined,
   let response = operation.responses[status];
   if (response === undefined) {
     response = operation.responses['default'];
-  }
-  if (response === undefined) {
-    return {
-      actual: 'UNDEFINED_RESPONSE',
-      expected: 'RESPONSE'
-    };
   }
 
   return validate(body, response);

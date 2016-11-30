@@ -476,10 +476,19 @@ describe('swagger2', () => {
 
   describe('no-base-path.yaml', () => {
     const compiled = compile('test/yaml/no-base-path.yaml');
-    it('/pets', () => {
+    it('/pets is resolved correctly with no basePath defined', () => {
       let compiledPath = compiled('/pets/abc');
       assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
     });
+
+    it('/pets verify an error is returned when no response or default response is defined', () => {
+      let compiledPath = compiled('/pets/abc');
+      assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 404), {
+        actual: undefined,
+        expected: {schema: undefined}
+      });
+    });
+
   });
 
 });
