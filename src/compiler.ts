@@ -188,12 +188,13 @@ export function compile(document: Document): Compiled {
     });
   });
 
+  let basePath = swagger.basePath || ''
   let matcher: CompiledPath[] = Object.keys(swagger.paths)
     .map((name) => {
       return {
         name,
         path: swagger.paths[name],
-        regex: new RegExp(swagger.basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
+        regex: new RegExp(basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
         expected: (name.match(/[^\/]+/g) || []).map((s) => s.toString())
       };
     });
