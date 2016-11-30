@@ -188,7 +188,7 @@ export function compile(document: Document): Compiled {
     });
   });
 
-  let basePath = swagger.basePath || ''
+  let basePath = swagger.basePath || '';
   let matcher: CompiledPath[] = Object.keys(swagger.paths)
     .map((name) => {
       return {
