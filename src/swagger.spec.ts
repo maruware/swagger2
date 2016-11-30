@@ -478,4 +478,20 @@ describe('swagger2', () => {
     });
   });
 
+  describe('no-base-path.yaml', () => {
+    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/no-base-path.yaml');
+    const document: swagger.Document | undefined = swagger.validateDocument(raw);
+    let compiled: Compiled;
+
+    if (document !== undefined) {
+      // construct a validation object, pre-compiling all schema and regex required
+      compiled = swagger.compileDocument(document);
+    }
+
+    it('/pets', () => {
+      let compiledPath = compiled('/pets/abc');
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
+    });
+  });
+
 });
