@@ -152,12 +152,13 @@ function compile(document) {
             });
         });
     });
+    var basePath = swagger.basePath || '';
     var matcher = Object.keys(swagger.paths)
         .map(function (name) {
         return {
             name: name,
             path: swagger.paths[name],
-            regex: new RegExp(swagger.basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
+            regex: new RegExp(basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
             expected: (name.match(/[^\/]+/g) || []).map(function (s) { return s.toString(); })
         };
     });

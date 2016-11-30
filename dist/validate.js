@@ -4,6 +4,15 @@ function isEmpty(value) {
     return value === undefined || value === '' || Object.keys(value).length === 0;
 }
 function validate(value, schema) {
+    // if no schema, treat as an error
+    if (schema === undefined) {
+        return {
+            actual: value,
+            expected: {
+                schema: undefined
+            },
+        };
+    }
     var valid = schema.validator(value);
     if (valid) {
         return;
