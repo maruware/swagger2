@@ -178,6 +178,12 @@ export function response(compiledPath: CompiledPath | undefined,
   if (response === undefined) {
     response = operation.responses['default'];
   }
+  if (response === undefined) {
+    return {
+      actual: 'UNDEFINED_RESPONSE',
+      expected: 'RESPONSE'
+    };
+  }
 
   return validate(body, response);
 }
