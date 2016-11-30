@@ -27,7 +27,18 @@
 import * as assert from 'assert';
 
 import * as swagger from './swagger';
-import {Compiled} from './swagger';
+
+function compile(fileName: string) {
+  const raw = swagger.loadDocumentSync(fileName);
+  const document: swagger.Document | undefined = swagger.validateDocument(raw);
+
+  /* istanbul ignore if */
+  if (document === undefined) {
+    throw Error(`${fileName} failed to compile`);
+  }
+
+  return swagger.compileDocument(document);
+}
 
 describe('swagger2', () => {
   it('has a loadDocumentSync function', () => assert.equal(typeof swagger.loadDocumentSync, 'function'));
@@ -37,15 +48,7 @@ describe('swagger2', () => {
   it('has a compileDocument function', () => assert.equal(typeof swagger.compileDocument, 'function'));
 
   describe('petstore', () => {
-    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/petstore.yaml');
-    const document: swagger.Document | undefined = swagger.validateDocument(raw);
-
-    let compiled: Compiled;
-
-    if (document !== undefined) {
-      // construct a validation object, pre-compiling all schema and regex required
-      compiled = swagger.compileDocument(document);
-    }
+    const compiled = compile('test/yaml/petstore.yaml');
 
     it('invalid paths are undefined', () => {
       assert.equal(undefined, compiled('/v1/bad'));
@@ -440,14 +443,7 @@ describe('swagger2', () => {
   // });
 
   describe('parameters.yaml', () => {
-    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/parameters.yaml');
-    const document: swagger.Document | undefined = swagger.validateDocument(raw);
-    let compiled: Compiled;
-
-    if (document !== undefined) {
-      // construct a validation object, pre-compiling all schema and regex required
-      compiled = swagger.compileDocument(document);
-    }
+    const compiled = compile('test/yaml/parameters.yaml');
 
     it('/api/pets', () => {
       let compiledPath = compiled('/api/pets/abc');
@@ -479,15 +475,7 @@ describe('swagger2', () => {
   });
 
   describe('no-base-path.yaml', () => {
-    const raw = swagger.loadDocumentSync(__dirname + '/../test/yaml/no-base-path.yaml');
-    const document: swagger.Document | undefined = swagger.validateDocument(raw);
-    let compiled: Compiled;
-
-    if (document !== undefined) {
-      // construct a validation object, pre-compiling all schema and regex required
-      compiled = swagger.compileDocument(document);
-    }
-
+    const compiled = compile('test/yaml/no-base-path.yaml');
     it('/pets', () => {
       let compiledPath = compiled('/pets/abc');
       assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
