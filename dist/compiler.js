@@ -26,8 +26,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-var jsonValidator = require('is-my-json-valid');
-var deref = require('json-schema-deref-sync');
+var jsonValidator = require("is-my-json-valid");
+var deref = require("json-schema-deref-sync");
 /*
  * We need special handling for query validation, since they're all strings.
  * e.g. we must treat "5" as a valid number
@@ -121,7 +121,7 @@ function compile(document) {
             var operation = path[operationName];
             var parameters = {};
             var resolveParameter = function (parameter) {
-                parameters[(parameter.name + ":" + parameter.location)] = parameter;
+                parameters[parameter.name + ":" + parameter.location] = parameter;
             };
             // start with parameters at path level
             (path.parameters || []).forEach(resolveParameter);
