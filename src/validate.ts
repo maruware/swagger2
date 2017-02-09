@@ -35,6 +35,7 @@ export interface ValidationError {
   name?: string;
   actual: any;
   expected: any;
+  error?: any;
 }
 
 function isEmpty(value: any) {
@@ -63,8 +64,12 @@ function validate(value: any, schema: CompiledDefinition): ValidationError | und
       schema: schema.schema,
       type: schema.type,
       format: schema.format
-    }
+    },
   };
+  const errorDetail = (schema.validator as any).error;
+  if (errorDetail) {
+    error.error = errorDetail;
+  }
 
   if (error.expected.schema === undefined) {
     delete error.expected.schema;
