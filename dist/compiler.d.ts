@@ -1,7 +1,5 @@
 import { Definition, Document, Parameter, PathItem } from './schema';
-export interface Compiled {
-    (path: string): CompiledPath | undefined;
-}
+export declare type Compiled = (path: string) => CompiledPath | undefined;
 export interface CompiledDefinition extends Definition {
     validator: (value: any) => boolean;
 }
