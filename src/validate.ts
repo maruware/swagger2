@@ -53,11 +53,11 @@ function validate(value: any, schema: CompiledDefinition): ValidationError | und
     };
   }
 
-  let valid = schema.validator(value);
+  const valid = schema.validator(value);
   if (valid) {
     return;
   }
-  let error: ValidationError = {
+  const error: ValidationError = {
     actual: value,
     expected: {
       schema: schema.schema,
@@ -93,21 +93,21 @@ export function request(compiledPath: CompiledPath | undefined,
   }
 
   // get operation object for path and method
-  let operation = (<any> compiledPath.path)[method.toLowerCase()];
+  const operation = (compiledPath.path as any)[method.toLowerCase()];
 
   if (operation === undefined) {
     // operation not defined, return 405 (method not allowed)
     return;
   }
 
-  let parameters = operation.resolvedParameters;
-  let validationErrors: ValidationError[] = [];
+  const parameters = operation.resolvedParameters;
+  const validationErrors: ValidationError[] = [];
   let bodyDefined = false;
 
   // check all the parameters match swagger schema
   if (parameters.length === 0) {
 
-    let error = validate(body, {validator: isEmpty});
+    const error = validate(body, {validator: isEmpty});
     if (error !== undefined) {
       error.where = 'body';
       validationErrors.push(error);
@@ -135,8 +135,8 @@ export function request(compiledPath: CompiledPath | undefined,
         value = (query || {})[parameter.name];
         break;
       case 'path':
-        let actual = compiledPath.name.match(/[^\/]+/g);
-        let valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
+        const actual = compiledPath.name.match(/[^\/]+/g);
+        const valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
         value = actual ? actual[valueIndex] : undefined;
         break;
       case 'body':
@@ -150,7 +150,7 @@ export function request(compiledPath: CompiledPath | undefined,
       // do nothing
     }
 
-    let error = validate(value, parameter);
+    const error = validate(value, parameter);
     if (error !== undefined) {
       error.where = parameter.in;
       validationErrors.push(error);
@@ -159,7 +159,7 @@ export function request(compiledPath: CompiledPath | undefined,
 
   // ensure body is undefined if no body schema is defined
   if (!bodyDefined && body !== undefined) {
-    let error = validate(body, {validator: isEmpty});
+    const error = validate(body, {validator: isEmpty});
     if (error !== undefined) {
       error.where = 'body';
       validationErrors.push(error);
@@ -182,7 +182,7 @@ export function response(compiledPath: CompiledPath | undefined,
     };
   }
 
-  let operation = (<any> compiledPath.path)[method.toLowerCase()];
+  const operation = (compiledPath.path as any)[method.toLowerCase()];
 
   // check the response matches the swagger schema
   let response = operation.responses[status];

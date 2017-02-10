@@ -56,7 +56,7 @@ describe('swagger2', () => {
     });
 
     it('compiles valid paths', () => {
-      let compiledPath = compiled('/v1/pets');
+      const compiledPath = compiled('/v1/pets');
       assert.notEqual(compiledPath, undefined);
       if (compiledPath !== undefined) {
         assert.equal(compiledPath.name, '/pets');
@@ -68,7 +68,7 @@ describe('swagger2', () => {
     });
 
     describe('/v1/pets', () => {
-      let compiledPath = compiled('/v1/pets');
+      const compiledPath = compiled('/v1/pets');
 
       it('do not allow DELETE', () => {
         assert.equal(undefined, swagger.validateRequest(compiledPath, 'delete', {}, {}));
@@ -267,7 +267,7 @@ describe('swagger2', () => {
     describe('/v1/pets/{petId}', () => {
 
       it('do not allow POSTs, PUTs or DELETE', () => {
-        let compiledPath = compiled('/v1/pets/3');
+        const compiledPath = compiled('/v1/pets/3');
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'post', {}, {}), undefined);
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {}, {}), undefined);
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'delete', {}, {}), undefined);
@@ -275,7 +275,7 @@ describe('swagger2', () => {
 
       describe('get', () => {
         it('petId must return 400 if optional header has wrong format', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
             'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ', 'If-None-Match': 'NOT NUMBER'}),
             [{
@@ -285,7 +285,7 @@ describe('swagger2', () => {
             }]);
         });
         it('petId must return 400 if required header missing', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {String: 'hello'}), [{
             actual: undefined,
             expected: {type: 'string'},
@@ -293,7 +293,7 @@ describe('swagger2', () => {
           }]);
         });
         it('petId must return an array of pet objects', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
             'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ'}));
           assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200, [{
@@ -301,7 +301,7 @@ describe('swagger2', () => {
           }]), undefined);
         });
         it('petId must accept a required array of strings in query', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
             'get', {String: 'hello'}, undefined, {'If-Match': 'XYZ'}));
           assert.deepStrictEqual([], swagger.validateRequest(compiledPath,
@@ -317,7 +317,7 @@ describe('swagger2', () => {
         });
 
         it('petId must accept an optional array of numbers in query', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
             'get', {String: 'hello', Number: 213}, undefined, {'If-Match': 'XYZ'}), []);
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
@@ -339,7 +339,7 @@ describe('swagger2', () => {
         });
 
         it('petId must accept an optional array of booleans in query', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
             'get', {String: 'hello', Boolean: true}, undefined, {'If-Match': 'XYZ'}), []);
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
@@ -361,7 +361,7 @@ describe('swagger2', () => {
         });
 
         it('petId must accept an optional spaced array of booleans in query', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
             'get', {String: 'hello', SpacedBoolean: 'true'}, undefined, {'If-Match': 'XYZ'}), []);
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
@@ -393,7 +393,7 @@ describe('swagger2', () => {
         });
 
         it('petId must accept an optional tabbed array of booleans in query', () => {
-          let compiledPath = compiled('/v1/pets/abc');
+          const compiledPath = compiled('/v1/pets/abc');
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
             'get', {String: 'hello', TabbedBoolean: 'true'}, undefined, {'If-Match': 'XYZ'}), []);
           assert.deepStrictEqual(swagger.validateRequest(compiledPath,
@@ -446,7 +446,7 @@ describe('swagger2', () => {
     const compiled = compile('test/yaml/parameters.yaml');
 
     it('/api/pets', () => {
-      let compiledPath = compiled('/api/pets/abc');
+      const compiledPath = compiled('/api/pets/abc');
 
       // not ok
       assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get', {
@@ -477,12 +477,12 @@ describe('swagger2', () => {
   describe('no-base-path.yaml', () => {
     const compiled = compile('test/yaml/no-base-path.yaml');
     it('/pets is resolved correctly with no basePath defined', () => {
-      let compiledPath = compiled('/pets/abc');
+      const compiledPath = compiled('/pets/abc');
       assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
     });
 
     it('/pets verify an error is returned when no response or default response is defined', () => {
-      let compiledPath = compiled('/pets/abc');
+      const compiledPath = compiled('/pets/abc');
       assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 404), {
         actual: undefined,
         expected: {schema: undefined}

@@ -33,9 +33,7 @@ import * as deref from 'json-schema-deref-sync';
 
 import {CollectionFormat, Definition, Document, Parameter, PathItem} from './schema';
 
-export interface Compiled {
-  (path: string): CompiledPath | undefined;
-}
+export type Compiled = (path: string) => CompiledPath | undefined;
 
 export interface CompiledDefinition extends Definition {
   validator: (value: any) => boolean;
@@ -58,7 +56,7 @@ export interface CompiledPath {
  * e.g. we must treat "5" as a valid number
  */
 function stringValidator(schema: any) {
-  let validator = jsonValidator(schema);
+  const validator = jsonValidator(schema);
   return (value: any) => {
 
     // if an optional field is not provided, we're all good other not so much
@@ -143,15 +141,15 @@ function stringValidator(schema: any) {
 
 export function compile(document: Document): Compiled {
   // get the de-referenced version of the swagger document
-  let swagger = deref(document);
+  const swagger = deref(document);
 
   // add a validator for every parameter in swagger document
   Object.keys(swagger.paths).forEach((pathName) => {
-    let path = swagger.paths[pathName];
+    const path = swagger.paths[pathName];
     Object.keys(path).filter((name) => name !== 'parameters').forEach((operationName) => {
-      let operation = path[operationName];
+      const operation = path[operationName];
 
-      let parameters: any = {};
+      const parameters: any = {};
       const resolveParameter = (parameter: any) => {
         parameters[`${parameter.name}:${parameter.location}`] = parameter;
       };
@@ -167,7 +165,7 @@ export function compile(document: Document): Compiled {
 
       // create parameter validators
       operation.resolvedParameters.forEach((parameter: CompiledParameter) => {
-        let schema = parameter.schema || parameter;
+        const schema = parameter.schema || parameter;
         if (parameter.in === 'query' || parameter.in === 'header') {
           parameter.validator = stringValidator(schema);
         } else {
@@ -176,7 +174,7 @@ export function compile(document: Document): Compiled {
       });
 
       Object.keys(operation.responses).forEach((statusCode) => {
-        let response = operation.responses[statusCode];
+        const response = operation.responses[statusCode];
         if (response.schema) {
           response.validator = jsonValidator(response.schema);
         } else {
@@ -188,8 +186,8 @@ export function compile(document: Document): Compiled {
     });
   });
 
-  let basePath = swagger.basePath || '';
-  let matcher: CompiledPath[] = Object.keys(swagger.paths)
+  const basePath = swagger.basePath || '';
+  const matcher: CompiledPath[] = Object.keys(swagger.paths)
     .map((name) => {
       return {
         name,
@@ -201,7 +199,7 @@ export function compile(document: Document): Compiled {
 
   return (path: string) => {
     // get a list of matching paths, there should be only one
-    let matches = matcher.filter((match) => !!path.match(match.regex));
+    const matches = matcher.filter((match) => !!path.match(match.regex));
     if (matches.length !== 1) {
       return;
     }
