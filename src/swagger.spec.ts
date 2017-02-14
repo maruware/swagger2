@@ -191,7 +191,8 @@ describe('swagger2', () => {
               required: ['code', 'message'],
               properties: {code: {type: 'integer', format: 'int32'}, message: {type: 'string'}}
             }
-          }
+          },
+          error: 'data.message is required'
         }));
 
         it('invalid object response',
@@ -209,7 +210,8 @@ describe('swagger2', () => {
                   }
                 }
               }
-            }
+            },
+            error: 'data is the wrong type'
           }));
 
         it('invalid array response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 200,
@@ -227,7 +229,8 @@ describe('swagger2', () => {
                 }
               }
             }
-          }
+          },
+          error: 'data.0.id is required\ndata.0.name is required'
         }));
 
         it('invalid pet object response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get',
@@ -247,7 +250,8 @@ describe('swagger2', () => {
                 }
               }
             }
-          }
+          },
+          error: 'data.0.id is the wrong type'
         }));
 
         it('valid error response', () => assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 400, {

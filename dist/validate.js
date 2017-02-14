@@ -23,8 +23,12 @@ function validate(value, schema) {
             schema: schema.schema,
             type: schema.type,
             format: schema.format
-        }
+        },
     };
+    var errorDetail = schema.validator.error;
+    if (errorDetail) {
+        error.error = errorDetail;
+    }
     if (error.expected.schema === undefined) {
         delete error.expected.schema;
     }
