@@ -1,5 +1,6 @@
 // validate.js
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function isEmpty(value) {
     return value === undefined || value === '' || Object.keys(value).length === 0;
 }

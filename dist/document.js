@@ -1,5 +1,6 @@
 // document.ts
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Loading, parsing and validating Swagger v2 documents
  */

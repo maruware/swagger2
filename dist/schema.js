@@ -16,4 +16,5 @@
  * 3) ONLY SUPPORTS 2.0 SCHEMA.
  */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 //# sourceMappingURL=schema.js.map
