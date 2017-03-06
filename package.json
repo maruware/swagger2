@@ -21,24 +21,24 @@
   "homepage": "https://github.com/carlansley/swagger2#readme",
   "typings": "./dist/swagger.d.ts",
   "dependencies": {
-    "is-my-json-valid": "^2.15.0",
+    "is-my-json-valid": "^2.16.0",
     "json-refs": "^2.1.6",
     "json-schema-deref-sync": "^0.3.3",
     "yamljs": "^0.2.8"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.39",
-    "@types/nock": "^8.2.0",
+    "@types/nock": "^8.2.1",
     "@types/node": "^7.0.5",
     "@types/yamljs": "^0.2.30",
-    "coveralls": "^2.11.16",
+    "coveralls": "^2.12.0",
     "expectations": "^0.7.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^3.2.0",
-    "nock": "^9.0.5",
+    "nock": "^9.0.9",
     "remap-istanbul": "^0.9.1",
-    "tslint": "^4.4.2",
-    "typescript": "^2.1.6"
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1"
   },
   "maintainers": [
     {
@@ -51,7 +51,7 @@
     "version": "npm run dist && git add -A dist",
     "postversion": "git push && git push --tags",
     "build": "rm -rf build && tsc && cp src/schema.json build",
-    "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 -d --pretty --noImplicitAny && cp src/schema.json dist",
+    "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 --lib es6 -d --pretty --noImplicitAny && cp src/schema.json dist",
     "clean": "rm -rf build && rm -rf coverage && rm -rf node_modules",
     "lint": "tslint -c ./tslint.json --project ./tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
