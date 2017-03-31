@@ -159,7 +159,7 @@ function compile(document) {
         return {
             name: name,
             path: swagger.paths[name],
-            regex: new RegExp(basePath + name.replace(/\{[^}]*}/g, '[^/]+') + '$'),
+            regex: new RegExp(basePath.replace(/\/*$/, '') + name.replace(/\{[^}]*}/g, '[^/]+') + '/?$'),
             expected: (name.match(/[^\/]+/g) || []).map(function (s) { return s.toString(); })
         };
     });
