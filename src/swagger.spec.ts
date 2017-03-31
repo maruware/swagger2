@@ -507,7 +507,7 @@ describe('swagger2', () => {
       assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
     });
 
-    it('/pets verifys and return error while the request path ends with multiple "/"', () => {
+    it('/pets verifies and returns error while the request path ends with multiple "/"', () => {
       const compiledPath = compiled('/pets/abc//');
       assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 404), {
         actual: 'UNDEFINED_PATH',
