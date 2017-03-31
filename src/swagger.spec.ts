@@ -495,4 +495,25 @@ describe('swagger2', () => {
 
   });
 
+  describe('tricky-slash-path.yaml', () => {
+    const compiled = compile('test/yaml/tricky-slash-path.yaml');
+    it('/pets is resolved correctly with basePath defined as "/"', () => {
+      const compiledPath = compiled('/pets/abc');
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
+    });
+
+    it('/pets is resolved correctly with the request path ends with a "/"', () => {
+      const compiledPath = compiled('/pets/abc/');
+      assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'get'), []);
+    });
+
+    it('/pets verifys and return error while the request path ends with multiple "/"', () => {
+      const compiledPath = compiled('/pets/abc//');
+      assert.deepStrictEqual(swagger.validateResponse(compiledPath, 'get', 404), {
+        actual: 'UNDEFINED_PATH',
+        expected: 'PATH'
+      });
+    });
+  });
+
 });
