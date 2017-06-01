@@ -78,7 +78,8 @@ const PETSTORE_DOCUMENT: schema.Document = {
             description: 'An paged array of pets',
             headers: {'x-next': {type: 'string', description: 'A link to the next page of responses'}},
             schema: {$ref: '#/definitions/Pets'}
-          }, default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       },
       post: {
@@ -134,7 +135,8 @@ const PETSTORE_DOCUMENT: schema.Document = {
           200: {
             description: 'Expected response to a valid request',
             schema: {$ref: '#/definitions/Pets'}
-          }, default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     }
@@ -295,7 +297,8 @@ const PETSTORE_SEPARATE_DOCUMENT: schema.Document = {
           200: {
             description: 'pet response',
             schema: {type: 'array', items: {$ref: 'Pet.yaml'}}
-          }, default: {description: 'unexpected error', schema: {$ref: '../common/Error.yaml'}}
+          },
+          default: {description: 'unexpected error', schema: {$ref: '../common/Error.yaml'}}
         }
       },
       post: {
@@ -392,7 +395,8 @@ const PETSTORE_EXPANDED_DOCUMENT: schema.Document = {
           200: {
             description: 'pet response',
             schema: {type: 'array', items: {$ref: '#/definitions/Pet'}}
-          }, default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       },
       post: {
@@ -496,7 +500,8 @@ const UBER_DOCUMENT: schema.Document = {
           200: {
             description: 'An array of products',
             schema: {type: 'array', items: {$ref: '#/definitions/Product'}}
-          }, default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     },
@@ -538,7 +543,8 @@ const UBER_DOCUMENT: schema.Document = {
           200: {
             description: 'An array of price estimates by product',
             schema: {type: 'array', items: {$ref: '#/definitions/PriceEstimate'}}
-          }, default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     },
@@ -577,7 +583,8 @@ const UBER_DOCUMENT: schema.Document = {
           200: {
             description: 'An array of products',
             schema: {type: 'array', items: {$ref: '#/definitions/Product'}}
-          }, default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     },
@@ -590,7 +597,8 @@ const UBER_DOCUMENT: schema.Document = {
           200: {
             description: 'Profile information for a user',
             schema: {$ref: '#/definitions/Profile'}
-          }, default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     },
@@ -616,7 +624,8 @@ const UBER_DOCUMENT: schema.Document = {
           200: {
             description: 'History information for the given user',
             schema: {$ref: '#/definitions/Activities'}
-          }, default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
+          },
+          default: {description: 'Unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
     }

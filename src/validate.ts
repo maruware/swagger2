@@ -192,7 +192,7 @@ export function response(compiledPath: CompiledPath | undefined,
   // check the response matches the swagger schema
   let response = operation.responses[status];
   if (response === undefined) {
-    response = operation.responses['default'];
+    response = operation.responses.default;
   }
 
   return validate(body, response);

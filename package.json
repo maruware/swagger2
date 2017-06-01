@@ -22,23 +22,22 @@
   "typings": "./dist/swagger.d.ts",
   "dependencies": {
     "is-my-json-valid": "^2.16.0",
-    "json-refs": "^2.1.6",
     "json-schema-deref-sync": "^0.3.3",
-    "yamljs": "^0.2.8"
+    "yamljs": "^0.2.10"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.40",
+    "@types/mocha": "^2.2.41",
     "@types/nock": "^8.2.1",
-    "@types/node": "^7.0.12",
+    "@types/node": "^7.0.22",
     "@types/yamljs": "^0.2.30",
-    "coveralls": "^2.13.0",
+    "coveralls": "^2.13.1",
     "expectations": "^0.7.1",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.2.0",
-    "nock": "^9.0.11",
+    "mocha": "^3.4.2",
+    "nock": "^9.0.13",
     "remap-istanbul": "^0.9.5",
-    "tslint": "^5.0.0",
-    "typescript": "^2.2.2"
+    "tslint": "^5.4.0",
+    "typescript": "^2.3.4"
   },
   "maintainers": [
     {
