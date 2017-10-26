@@ -1,5 +1,5 @@
-// swagger.ts
 "use strict";
+// swagger.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * swagger2

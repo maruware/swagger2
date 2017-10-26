@@ -1,5 +1,5 @@
-// validate.js
 "use strict";
+// validate.js
 Object.defineProperty(exports, "__esModule", { value: true });
 function isEmpty(value) {
     return value === undefined || value === '' || Object.keys(value).length === 0;
@@ -123,11 +123,11 @@ function response(compiledPath, method, status, body) {
     }
     var operation = compiledPath.path[method.toLowerCase()];
     // check the response matches the swagger schema
-    var response = operation.responses[status];
-    if (response === undefined) {
-        response = operation.responses['default'];
+    var schema = operation.responses[status];
+    if (schema === undefined) {
+        schema = operation.responses.default;
     }
-    return validate(body, response);
+    return validate(body, schema);
 }
 exports.response = response;
 //# sourceMappingURL=validate.js.map

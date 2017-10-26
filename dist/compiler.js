@@ -1,5 +1,5 @@
-// compiler.js
 "use strict";
+// compiler.js
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Convert a swagger document into a compiled form so that it can be used by validator
