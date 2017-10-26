@@ -190,10 +190,10 @@ export function response(compiledPath: CompiledPath | undefined,
   const operation = (compiledPath.path as any)[method.toLowerCase()];
 
   // check the response matches the swagger schema
-  let response = operation.responses[status];
-  if (response === undefined) {
-    response = operation.responses.default;
+  let schema = operation.responses[status];
+  if (schema === undefined) {
+    schema = operation.responses.default;
   }
 
-  return validate(body, response);
+  return validate(body, schema);
 }
