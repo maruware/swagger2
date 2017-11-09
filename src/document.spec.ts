@@ -146,7 +146,7 @@ const PETSTORE_DOCUMENT: schema.Document = {
       required: ['id', 'name'],
       properties: {
         id: {type: 'integer', format: 'int64'},
-        name: {type: 'string'},
+        name: {type: 'string', minLength: 1},
         tag: {type: 'string'}
       }
     },

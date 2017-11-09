@@ -114,6 +114,7 @@ definitions:
         format: int64
       name:
         type: string
+        minLength: 1
       tag:
         type: string
   Pets:
