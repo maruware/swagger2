@@ -133,7 +133,7 @@ function compile(document) {
             // create parameter validators
             operation.resolvedParameters.forEach(function (parameter) {
                 var schema = parameter.schema || parameter;
-                if (parameter.in === 'query' || parameter.in === 'header') {
+                if (parameter.in === 'query' || parameter.in === 'header' || parameter.in === 'path') {
                     parameter.validator = stringValidator(schema);
                 }
                 else {
