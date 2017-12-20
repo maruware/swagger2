@@ -18,6 +18,38 @@
   produces:
     - "application/json"
   paths:
+    /petsByNumber/{num}:
+      parameters:
+        - name: num
+          in: path
+          required: true
+          description: number of the pet to lookup
+          type: number
+      get:
+        description: "Returns a pet by name"
+        produces:
+          - "application/json"
+        responses:
+          "200":
+            description: "A pet"
+            schema:
+              $ref: "#/definitions/Pet"
+    /petsByBoolean/{bool}:
+      parameters:
+        - name: bool
+          in: path
+          required: true
+          description: boolean of the pet to lookup
+          type: boolean
+      get:
+        description: "Returns a pet by boolean"
+        produces:
+          - "application/json"
+        responses:
+          "200":
+            description: "A pet"
+            schema:
+              $ref: "#/definitions/Pet"
     /pets/{name}:
       parameters:
         - name: name

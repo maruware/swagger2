@@ -166,7 +166,7 @@ export function compile(document: Document): Compiled {
       // create parameter validators
       operation.resolvedParameters.forEach((parameter: CompiledParameter) => {
         const schema = parameter.schema || parameter;
-        if (parameter.in === 'query' || parameter.in === 'header') {
+        if (parameter.in === 'query' || parameter.in === 'header' || parameter.in === 'path') {
           parameter.validator = stringValidator(schema);
         } else {
           parameter.validator = jsonValidator(schema);
