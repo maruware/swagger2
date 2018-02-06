@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /*
  The MIT License
 
- Copyright (c) 2014-2016 Carl Ansley
+ Copyright (c) 2014-2018 Carl Ansley
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-var fs = require("fs");
 var jsonValidator = require("is-my-json-valid");
 var YAML = require("yamljs");
+var schema = require("./schema.json");
 // build a swagger validator from the official v2.0 schema
-var schemaValidator = jsonValidator(JSON.parse(fs.readFileSync(__dirname + '/schema.json', 'utf8')));
+var schemaValidator = jsonValidator(schema);
 /*
  * Validate a swagger document against the 2.0 schema, returning a typed Document object.
  */

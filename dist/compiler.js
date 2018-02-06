@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /*
  The MIT License
 
- Copyright (c) 2014-2016 Carl Ansley
+ Copyright (c) 2014-2018 Carl Ansley
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -159,7 +159,7 @@ function compile(document) {
         return {
             name: name,
             path: swagger.paths[name],
-            regex: new RegExp(basePath.replace(/\/*$/, '') + name.replace(/\{[^}]*}/g, '[^/]+') + '/?$'),
+            regex: new RegExp('^' + basePath.replace(/\/*$/, '') + name.replace(/\{[^}]*}/g, '[^/]+') + '/?$'),
             expected: (name.match(/[^\/]+/g) || []).map(function (s) { return s.toString(); })
         };
     });
