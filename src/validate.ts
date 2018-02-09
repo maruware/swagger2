@@ -144,7 +144,7 @@ export function request(compiledPath: CompiledPath | undefined,
         if (pathParameters) {
           value = pathParameters[parameter.name];
         } else {
-          const actual = compiledPath.name.match(/[^\/]+/g);
+          const actual = (compiledPath.requestPath || '').match(/[^\/]+/g);
           const valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
           value = actual ? actual[valueIndex] : undefined;
         }

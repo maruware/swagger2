@@ -93,7 +93,8 @@ paths:
           in: path
           required: true
           description: The id of the pet to retrieve
-          type: string
+          type: integer
+          format: int32
       responses:
         "200":
           description: Expected response to a valid request

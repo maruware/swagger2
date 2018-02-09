@@ -48,6 +48,7 @@ export interface CompiledPath {
   path: PathItem;
   name: string;
   expected: string[];
+  requestPath?: string;
 }
 
 
@@ -203,6 +204,6 @@ export function compile(document: Document): Compiled {
     if (matches.length !== 1) {
       return;
     }
-    return matches[0];
+    return {requestPath: path.substring((basePath || '').length), ...matches[0]};
   };
 }

@@ -129,7 +129,8 @@ const PETSTORE_DOCUMENT: schema.Document = {
           in: 'path',
           required: true,
           description: 'The id of the pet to retrieve',
-          type: 'string'
+          type: 'integer',
+          format: 'int32'
         }],
         responses: {
           200: {
@@ -750,7 +751,6 @@ describe('document', () => {
     // it('succeed validation on petstore-minimal', () => assert.ok(validate(load('petstore-minimal.yaml'))));
     // it('succeed validation on petstore-simple', () => assert.ok(validate(load('petstore-simple.yaml'))));
     // it('succeed validation on petstore-with-external-docs', () => assert.ok(validate(load('petstore-with-external-docs.yaml'))));
-
   });
 
 
