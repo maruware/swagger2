@@ -11,5 +11,6 @@ export interface CompiledPath {
     path: PathItem;
     name: string;
     expected: string[];
+    requestPath?: string;
 }
 export declare function compile(document: Document): Compiled;

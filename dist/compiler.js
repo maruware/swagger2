@@ -1,5 +1,13 @@
 "use strict";
 // compiler.js
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Convert a swagger document into a compiled form so that it can be used by validator
@@ -169,7 +177,7 @@ function compile(document) {
         if (matches.length !== 1) {
             return;
         }
-        return matches[0];
+        return __assign({ requestPath: path.substring((basePath || '').length) }, matches[0]);
     };
 }
 exports.compile = compile;

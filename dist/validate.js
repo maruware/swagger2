@@ -88,7 +88,7 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
                     value = pathParameters[parameter.name];
                 }
                 else {
-                    var actual = compiledPath.name.match(/[^\/]+/g);
+                    var actual = (compiledPath.requestPath || '').match(/[^\/]+/g);
                     var valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
                     value = actual ? actual[valueIndex] : undefined;
                 }
