@@ -535,6 +535,12 @@ describe('swagger2', () => {
         assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'put', {String: 123}), []);
 
         // ok
+        assert.deepStrictEqual(swagger.validateRequest(compiledPath, 'patch', {
+          String: 'hello',
+          Number: 1
+        }, {tag: 'dog'}), []);
+
+        // ok
         assert.deepStrictEqual(swagger
           .validateRequest(compile('test/yaml/parameters.yaml')('/api/petsByNumber/123'),
             'get', undefined, undefined, undefined, {

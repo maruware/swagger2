@@ -156,6 +156,10 @@ export function request(compiledPath: CompiledPath | undefined,
       case 'header':
         value = (headers || {})[parameter.name];
         break;
+      case 'formData':
+        value = (body || {})[parameter.name];
+        bodyDefined = true;
+        break;
       default:
       // do nothing
     }

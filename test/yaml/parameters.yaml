@@ -92,6 +92,21 @@
             description: "A list of pets."
             schema:
               $ref: "#/definitions/Pet"
+      patch:
+        description: "Updates a pet by name"
+        produces:
+          - "application/json"
+        parameters:
+          - name: tag
+            in: formData
+            required: true
+            description: pet tag
+            type: string
+        responses:
+          "200":
+            description: "A list of pets."
+            schema:
+              $ref: "#/definitions/Pet"
     /pets/{breed}/{fur}:
       parameters:
         - name: breed
