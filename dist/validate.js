@@ -100,6 +100,10 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
             case 'header':
                 value = (headers || {})[parameter.name];
                 break;
+            case 'formData':
+                value = (body || {})[parameter.name];
+                bodyDefined = true;
+                break;
             default:
         }
         var error = validate(value, parameter);
