@@ -50,7 +50,7 @@
     "version": "npm run dist && git add -A dist",
     "postversion": "git push && git push --tags",
     "build": "rm -rf build && tsc && cp src/schema.json build",
-    "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es5 --lib es6 -d --pretty --noImplicitAny && cp src/schema.json dist",
+    "dist": "rm -rf dist && tsc src/typings.d.ts src/swagger.ts -m commonjs --outDir dist --sourcemap --target es2017 --lib es2017 -d --pretty --noImplicitAny && cp src/schema.json dist",
     "clean": "rm -rf build && rm -rf coverage && rm -rf node_modules",
     "lint": "tslint -c ./tslint.json --project ./tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
