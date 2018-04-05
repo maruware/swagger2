@@ -30,9 +30,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-var compiler = require("./compiler");
-var document = require("./document");
-var validate = require("./validate");
+const compiler = require("./compiler");
+const document = require("./document");
+const validate = require("./validate");
 exports.loadDocumentSync = document.loadDocumentSync;
 exports.validateDocument = document.validateDocument;
 exports.validateRequest = validate.request;

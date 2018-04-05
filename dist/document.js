@@ -27,11 +27,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-var jsonValidator = require("is-my-json-valid");
-var YAML = require("yamljs");
-var schema = require("./schema.json");
+const jsonValidator = require("is-my-json-valid");
+const YAML = require("yamljs");
+const schema = require("./schema.json");
 // build a swagger validator from the official v2.0 schema
-var schemaValidator = jsonValidator(schema);
+const schemaValidator = jsonValidator(schema);
 /*
  * Validate a swagger document against the 2.0 schema, returning a typed Document object.
  */

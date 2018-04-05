@@ -1,13 +1,5 @@
 "use strict";
 // compiler.js
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * Convert a swagger document into a compiled form so that it can be used by validator
@@ -35,15 +27,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-var jsonValidator = require("is-my-json-valid");
-var deref = require("json-schema-deref-sync");
+const jsonValidator = require("is-my-json-valid");
+const deref = require("json-schema-deref-sync");
 /*
  * We need special handling for query validation, since they're all strings.
  * e.g. we must treat "5" as a valid number
  */
 function stringValidator(schema) {
-    var validator = jsonValidator(schema);
-    return function (value) {
+    const validator = jsonValidator(schema);
+    return (value) => {
         // if an optional field is not provided, we're all good other not so much
         if (value === undefined) {
             return !schema.required;
@@ -66,7 +58,7 @@ function stringValidator(schema) {
                 break;
             case 'array':
                 if (!Array.isArray(value)) {
-                    var format = schema.collectionFormat || 'csv';
+                    const format = schema.collectionFormat || 'csv';
                     switch (format) {
                         case 'csv':
                             value = String(value).split(',');
@@ -89,7 +81,7 @@ function stringValidator(schema) {
                 switch (schema.items.type) {
                     case 'number':
                     case 'integer':
-                        value = value.map(function (num) {
+                        value = value.map((num) => {
                             if (!isNaN(num)) {
                                 // if the value is a number, make sure it's a number
                                 return +num;
@@ -100,7 +92,7 @@ function stringValidator(schema) {
                         });
                         break;
                     case 'boolean':
-                        value = value.map(function (bool) {
+                        value = value.map((bool) => {
                             if (bool === 'true') {
                                 return true;
                             }
@@ -113,34 +105,36 @@ function stringValidator(schema) {
                         });
                         break;
                     default:
+                    // leave as-is
                 }
                 break;
             default:
+            // leave as-is
         }
         return validator(value);
     };
 }
 function compile(document) {
     // get the de-referenced version of the swagger document
-    var swagger = deref(document);
+    const swagger = deref(document);
     // add a validator for every parameter in swagger document
-    Object.keys(swagger.paths).forEach(function (pathName) {
-        var path = swagger.paths[pathName];
-        Object.keys(path).filter(function (name) { return name !== 'parameters'; }).forEach(function (operationName) {
-            var operation = path[operationName];
-            var parameters = {};
-            var resolveParameter = function (parameter) {
-                parameters[parameter.name + ":" + parameter.location] = parameter;
+    Object.keys(swagger.paths).forEach((pathName) => {
+        const path = swagger.paths[pathName];
+        Object.keys(path).filter((name) => name !== 'parameters').forEach((operationName) => {
+            const operation = path[operationName];
+            const parameters = {};
+            const resolveParameter = (parameter) => {
+                parameters[`${parameter.name}:${parameter.location}`] = parameter;
             };
             // start with parameters at path level
             (path.parameters || []).forEach(resolveParameter);
             // merge in or replace parameters from operation level
             (operation.parameters || []).forEach(resolveParameter);
             // create array of fully resolved parameters for operation
-            operation.resolvedParameters = Object.keys(parameters).map(function (key) { return parameters[key]; });
+            operation.resolvedParameters = Object.keys(parameters).map((key) => parameters[key]);
             // create parameter validators
-            operation.resolvedParameters.forEach(function (parameter) {
-                var schema = parameter.schema || parameter;
+            operation.resolvedParameters.forEach((parameter) => {
+                const schema = parameter.schema || parameter;
                 if (parameter.in === 'query' || parameter.in === 'header' || parameter.in === 'path') {
                     parameter.validator = stringValidator(schema);
                 }
@@ -148,36 +142,36 @@ function compile(document) {
                     parameter.validator = jsonValidator(schema);
                 }
             });
-            Object.keys(operation.responses).forEach(function (statusCode) {
-                var response = operation.responses[statusCode];
+            Object.keys(operation.responses).forEach((statusCode) => {
+                const response = operation.responses[statusCode];
                 if (response.schema) {
                     response.validator = jsonValidator(response.schema);
                 }
                 else {
                     // no schema, so ensure there is no response
                     // tslint:disable-next-line:no-null-keyword
-                    response.validator = function (body) { return body === undefined || body === null || body === ''; };
+                    response.validator = (body) => body === undefined || body === null || body === '';
                 }
             });
         });
     });
-    var basePath = swagger.basePath || '';
-    var matcher = Object.keys(swagger.paths)
-        .map(function (name) {
+    const basePath = swagger.basePath || '';
+    const matcher = Object.keys(swagger.paths)
+        .map((name) => {
         return {
-            name: name,
+            name,
             path: swagger.paths[name],
             regex: new RegExp('^' + basePath.replace(/\/*$/, '') + name.replace(/\{[^}]*}/g, '[^/]+') + '/?$'),
-            expected: (name.match(/[^\/]+/g) || []).map(function (s) { return s.toString(); })
+            expected: (name.match(/[^\/]+/g) || []).map((s) => s.toString())
         };
     });
-    return function (path) {
+    return (path) => {
         // get a list of matching paths, there should be only one
-        var matches = matcher.filter(function (match) { return !!path.match(match.regex); });
+        const matches = matcher.filter((match) => !!path.match(match.regex));
         if (matches.length !== 1) {
             return;
         }
-        return __assign({ requestPath: path.substring((basePath || '').length) }, matches[0]);
+        return Object.assign({ requestPath: path.substring((basePath || '').length) }, matches[0]);
     };
 }
 exports.compile = compile;

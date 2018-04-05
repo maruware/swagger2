@@ -14,11 +14,11 @@ function validate(value, schema) {
             },
         };
     }
-    var valid = schema.validator(value);
+    const valid = schema.validator(value);
     if (valid) {
         return;
     }
-    var error = {
+    const error = {
         actual: value,
         expected: {
             schema: schema.schema,
@@ -26,7 +26,7 @@ function validate(value, schema) {
             format: schema.format
         },
     };
-    var errorDetail = schema.validator.error;
+    const errorDetail = schema.validator.error;
     if (errorDetail) {
         error.error = errorDetail;
     }
@@ -50,23 +50,23 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
         return;
     }
     // get operation object for path and method
-    var operation = compiledPath.path[method.toLowerCase()];
+    const operation = compiledPath.path[method.toLowerCase()];
     if (operation === undefined) {
         // operation not defined, return 405 (method not allowed)
         return;
     }
-    var parameters = operation.resolvedParameters;
-    var validationErrors = [];
-    var bodyDefined = false;
+    const parameters = operation.resolvedParameters;
+    const validationErrors = [];
+    let bodyDefined = false;
     // check all the parameters match swagger schema
     if (parameters.length === 0) {
-        var error = validate(body, { validator: isEmpty });
+        const error = validate(body, { validator: isEmpty });
         if (error !== undefined) {
             error.where = 'body';
             validationErrors.push(error);
         }
         if (query !== undefined && Object.keys(query).length > 0) {
-            Object.keys(query).forEach(function (key) {
+            Object.keys(query).forEach((key) => {
                 validationErrors.push({
                     where: 'query',
                     name: key,
@@ -77,8 +77,8 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
         }
         return validationErrors;
     }
-    parameters.forEach(function (parameter) {
-        var value;
+    parameters.forEach((parameter) => {
+        let value;
         switch (parameter.in) {
             case 'query':
                 value = (query || {})[parameter.name];
@@ -88,8 +88,8 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
                     value = pathParameters[parameter.name];
                 }
                 else {
-                    var actual = (compiledPath.requestPath || '').match(/[^\/]+/g);
-                    var valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
+                    const actual = (compiledPath.requestPath || '').match(/[^\/]+/g);
+                    const valueIndex = compiledPath.expected.indexOf('{' + parameter.name + '}');
                     value = actual ? actual[valueIndex] : undefined;
                 }
                 break;
@@ -105,8 +105,9 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
                 bodyDefined = true;
                 break;
             default:
+            // do nothing
         }
-        var error = validate(value, parameter);
+        const error = validate(value, parameter);
         if (error !== undefined) {
             error.where = parameter.in;
             validationErrors.push(error);
@@ -114,7 +115,7 @@ function request(compiledPath, method, query, body, headers, pathParameters) {
     });
     // ensure body is undefined if no body schema is defined
     if (!bodyDefined && body !== undefined) {
-        var error = validate(body, { validator: isEmpty });
+        const error = validate(body, { validator: isEmpty });
         if (error !== undefined) {
             error.where = 'body';
             validationErrors.push(error);
@@ -130,9 +131,9 @@ function response(compiledPath, method, status, body) {
             expected: 'PATH'
         };
     }
-    var operation = compiledPath.path[method.toLowerCase()];
+    const operation = compiledPath.path[method.toLowerCase()];
     // check the response matches the swagger schema
-    var schema = operation.responses[status];
+    let schema = operation.responses[status];
     if (schema === undefined) {
         schema = operation.responses.default;
     }
