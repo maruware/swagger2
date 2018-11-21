@@ -168,7 +168,7 @@ function compile(document) {
     return (path) => {
         // get a list of matching paths, there should be only one
         const matches = matcher.filter((match) => !!path.match(match.regex));
-        if (matches.length !== 1) {
+        if (matches.length === 0) {
             return;
         }
         return Object.assign({ requestPath: path.substring((basePath || '').length) }, matches[0]);
