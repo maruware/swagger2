@@ -140,6 +140,48 @@ const PETSTORE_DOCUMENT: schema.Document = {
           default: {description: 'unexpected error', schema: {$ref: '#/definitions/Error'}}
         }
       }
+    },
+    '/pet/{petId}/uploadImage': {
+      post: {
+        summary: 'uploads an image',
+        operationId: 'uploadFile',
+        tags: ['pet'],
+        description: '',
+        consumes: ['multipart/form-data'],
+        produces: ['application/json'],
+        parameters: [
+          {
+            description: 'ID of pet to update',
+            format: 'int64',
+            in : 'path',
+            name: 'petId',
+            required: true,
+            type: 'integer',
+          },
+          {
+            description: 'Additional data to pass to server',
+            in : 'formData',
+            name: 'additionalMetadata',
+            required: false,
+            type: 'string'
+          },
+          {
+            description: 'file to upload',
+            in: 'formData',
+            name: 'file',
+            required: false,
+            type: 'file',
+          }
+        ],
+        responses: {
+          200: {
+            description: 'successful operation',
+            schema: {
+              $ref: '#/definitions/ApiResponse'
+            }
+          }
+        }
+      }
     }
   },
   definitions: {
@@ -155,6 +197,14 @@ const PETSTORE_DOCUMENT: schema.Document = {
     Error: {
       required: ['code', 'message'],
       properties: {code: {type: 'integer', format: 'int32'}, message: {type: 'string'}}
+    },
+    ApiResponse: {
+      type: 'object',
+      properties: {
+        code: {type: 'integer', format: 'int32'},
+        type: {type: 'string'},
+        message: {type: 'string'},
+      }
     }
   },
   parameters: {

@@ -42,7 +42,7 @@
 
 export type ParameterType = 'query' | 'path' | 'body' | 'header' | 'formData';
 
-export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
+export type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean' | 'file';
 
 export type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' |
   'byte' | 'binary' | 'date' | 'date-time' | 'password';

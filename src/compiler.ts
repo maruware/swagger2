@@ -139,6 +139,15 @@ function stringValidator(schema: any) {
   };
 }
 
+function fileValidator(schema: any) {
+  return (value: any) => {
+    // if an optional field is not provided, we're all good other not so much
+    if (value === undefined) {
+      return !schema.required;
+    }
+    return true;
+  };
+}
 
 export function compile(document: Document): Compiled {
   // get the de-referenced version of the swagger document
@@ -169,6 +178,8 @@ export function compile(document: Document): Compiled {
         const schema = parameter.schema || parameter;
         if (parameter.in === 'query' || parameter.in === 'header' || parameter.in === 'path') {
           parameter.validator = stringValidator(schema);
+        } else if (parameter.in === 'formData' && parameter.type === 'file') {
+          parameter.validator = fileValidator(schema);
         } else {
           parameter.validator = jsonValidator(schema);
         }

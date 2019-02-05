@@ -1,5 +1,5 @@
 export declare type ParameterType = 'query' | 'path' | 'body' | 'header' | 'formData';
-export declare type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean';
+export declare type DataType = 'array' | 'string' | 'number' | 'integer' | 'boolean' | 'file';
 export declare type DataFormat = 'uuid' | 'int32' | 'int64' | 'float' | 'double' | 'byte' | 'binary' | 'date' | 'date-time' | 'password';
 export declare type Schemes = 'http' | 'https' | 'ws' | 'wss';
 export declare type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
